@@ -1,0 +1,9 @@
+.venv
+logs
+__pycache__
+.env
+.directory
+.png
+files
+test_db.sqlite
+.pytest_cache

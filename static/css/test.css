@@ -1,0 +1,11 @@
+ 
+ .sm-text {
+   font-size: 11px !important; 
+}
+.xs-text {
+   font-size: x-small !important; 
+}
+
+input.small {
+	width: 60px;
+}

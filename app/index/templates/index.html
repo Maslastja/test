@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link href='//static.iood.ru/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet'>
+ 		<link rel='stylesheet' href={{ url_for('static',filename='css/clockface.css') }} type='text/css' >
+ 		<link rel='stylesheet' href={{ url_for('static',filename='css/test.css') }} type='text/css' >
+		<script src='//static.iood.ru/jquery/3.4.1/jquery.min.js'></script>
+		<script src={{ url_for('static',filename='js/test.js') }}></script> 
+		<script src={{ url_for('static',filename='js/clockface.js') }}></script> 
+	</head>
+	<body>
+		<form id='form' action='' method='post' class='form' novalidate>
+			<div class='container-fluid'>
+			<div class='col-md-6'>
+				<div class='row'>
+					<div class='form-group sm-text col-md-2'>
+						<label for='lp'>ЛП</label>
+						<input name='lp' id='lp' type='text'>
+					</div>
+					<div class='form-group col-md-1 sm-text'>
+						<label for='doz'>доза</label>
+						<input name='doz' id='doz' type='text' class='small'>	
+					</div>
+					<div class='form-group col-md-2 sm-text'>
+						<label for='date-start'>принимать с</label>
+						<input name='date-start' id='date-start' type='date' class='form-control'>	
+					</div>
+					<div class='form-group col-md-3 sm-text'>
+						<label for='days-count'>кол-во дней</label>
+						<input name='days-count' id='days-count' type='number' class='form-control small'>	
+					</div>
+					<div id='time-box' class='form-group sm-text col-md-11'>
+						<label for='time-box'>время приема</label>
+						<div id='time-box' class='input-group input-group-sm'>
+							<input id='txt1' type='text' class='form-control' disabled value=0>
+							<div class='input-group-btn'>		
+								{% for i in range(24) %}
+									<button type='button' id='b{{ i+1 }}' class='btn btn-default' onclick='change_class_btn({{ i+1 }}, "txt1")'>{{ i+1 }}</button>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+				</div>
+				<button id='add_lp' type='button' class='btn btn-default'><i class='glyphicon glyphicon-plus'></i></button>
+				<div id='prep' class='col-md-7'>				
+					<div id='list-lp' class='list-group col-md-3'>
+				</div>
+				{#<div>			
+					<input id='txt2' type='text' disabled style='width: 50px' value=0>		
+					<div class="btn-group btn-group-toggle" data-toggle="buttons">
+						{% for i in range(24) %}
+							<button type='button' id='b{{ i+1 }}' class='btn btn-sm btn-default' onclick='clickbtn({{ i+1 }})' style='font-size: x-small'>{{ i+1 }}</button>
+						{% endfor %}
+					</div>
+					<div>
+						<br>
+						<ol name='list' id='bl1'></ol>
+					</div>
+					<div>
+						<label for='date1'>Дата начала приема</label>				
+						<input id='date1' type='date'>
+						<label for='days'>Количество дней приема</label>				
+						<input id='days' type='number' style='width: 50px' value=0>
+					</div>
+					<div>
+						<label for='date1'>Дата отмены приема</label>
+						<input id='date2' type='date'>		
+					</div>
+					<button>сохранить</button>
+				</div>#}
+			</div>
+		</form>
+	</body>
+</html>
