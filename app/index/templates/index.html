@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link href='//static.iood.ru/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet'>
+		{#<link href='//static.iood.ru/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet'>#}
+ 		<link href={{ url_for('static',filename='css/bootstrap.min.css') }} rel='stylesheet'>
  		<link rel='stylesheet' href={{ url_for('static',filename='css/clockface.css') }} type='text/css' >
  		<link rel='stylesheet' href={{ url_for('static',filename='css/test.css') }} type='text/css' >
-		<script src='//static.iood.ru/jquery/3.4.1/jquery.min.js'></script>
+		{#<script src='//static.iood.ru/jquery/3.4.1/jquery.min.js'></script>#}
+		<script src='https://code.jquery.com/jquery-3.4.1.min.js'></script>
 		<script src={{ url_for('static',filename='js/test.js') }}></script> 
 		<script src={{ url_for('static',filename='js/clockface.js') }}></script> 
 	</head>
@@ -35,7 +37,7 @@
 							<input id='txt1' type='text' class='form-control' disabled value=0>
 							<div class='input-group-btn'>		
 								{% for i in range(24) %}
-									<button type='button' id='b{{ i+1 }}' class='btn btn-default' onclick='change_class_btn({{ i+1 }}, "txt1")'>{{ i+1 }}</button>
+									<button type='button' id='b{{ i+1 }}' class='btn btn-default txt1_btn' onclick='change_class_btn({{ i+1 }}, "txt1")'>{{ i+1 }}</button>
 								{% endfor %}
 							</div>
 						</div>
@@ -43,8 +45,9 @@
 				</div>
 				</div>
 				<button id='add_lp' type='button' class='btn btn-default'><i class='glyphicon glyphicon-plus'></i></button>
-				<div id='prep' class='col-md-7'>				
-					<div id='list-lp' class='list-group col-md-3'>
+				<div id='prep' class='row col-md-10'>				
+					<div id='lp-list' class='list-group col-md-3'></div>
+					<div id='lp-info' class='col-md-7'></div>
 				</div>
 				{#<div>			
 					<input id='txt2' type='text' disabled style='width: 50px' value=0>		

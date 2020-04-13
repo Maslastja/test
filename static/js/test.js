@@ -21,15 +21,19 @@
 			b.id = 'lp'+countlist;
 			b.innerHTML = $('#lp')[0].value;
 			b.setAttribute('onclick', 'click_lp()');
-			let sp = document.getElementById('list-lp');
+			let sp = document.getElementById('lp-list');
 			sp.appendChild(b);
 			
 			//добавление блока с разбивкой по времени 
 			var new_div = document.createElement('div');
 			new_div.className = 'col-md-3';	
-				divs = creatediv('lpdiv'+countlist);
-				new_div.appendChild(divs);
-				document.getElementById('prep').appendChild(new_div);
+			new_div.id = 'lp_times_'+countlist;
+			new_ol = document.createElement('ol');
+			new_ol.id = 'ol_lp_times_'+countlist;
+			new_div.appendChild(new_ol);
+			document.getElementById('lp-info').appendChild(new_div);
+			creatediv('lp_times_'+countlist);
+			//new_ol.appendChild(divs);
 		
 		});
 		
@@ -97,63 +101,73 @@
 			$('#'+idtxt)[0].value = k;
 		}		
 		
-		function creatediv(ident) {
-			let l = document.createElement('li');
-			l.id = 'li'+ident;
-			l.className = 'ellist';
-			l.setAttribute('data-sort', ident);
-	
-			let d = document.createElement('div');
-			d.className = 'form-group';
-			l.appendChild(d);
+		function creatediv(id_ol) {
+			var btnlist = $('.txt1_btn');
+			alert(id_ol)
+			for (i in btnlist) {
+				//alert(btnlist[i].className)
+				//alert($('#b'+id_btn).hasClass('btn-primary'))
+				if ($('#'+btnlist[i].id).hasClass('btn-primary')) {
+					var l = document.createElement('li');
+					ident = Number(i)+1;
+					l.id = 'li'+ident;
+					l.className = 'ellist';
+					l.setAttribute('data-sort', ident);
 			
-			//let d1 = document.createElement('div');
-			//d1.className = 'col-md-1';
-			//let s1 = document.createElement('span');
-			//s1.innerHTML = 'с'
-			//d1.appendChild(s1);
-			//d.appendChild(d1);
-			
-			//let t1 = document.createElement('input');
-			let t1 = create_time_input(ident, 'time1', 'с ');
-			//t1.id = 'time1'+ident;
-			//t1.className = 'time';
-			//t1.type = 'time';
-			//if (ident < 10) {
-			//	t1.value = '0'+ident+':00';
-			//} else {
-			//	t1.value = ident+':00';
-			//}
-			d.appendChild(t1);
-			
-			//let t2 = document.createElement('input');
-			let t2 = create_time_input(ident, 'time2', ' по ');
-			//t2.id = 'end'+ident;
-			//t2.type = 'time';
-			//if (ident < 10) {
-			//	t2.value = '0'+ident+':00';
-			//} else {
-			//	t2.value = ident+':00';
-			//}
-			d.appendChild(t2);
+					let d = document.createElement('div');
+					d.className = 'form-group row';
+					l.appendChild(d);
+					
+					//let d1 = document.createElement('div');
+					//d1.className = 'col-md-1';
+					//let s1 = document.createElement('span');
+					//s1.innerHTML = 'с'
+					//d1.appendChild(s1);
+					//d.appendChild(d1);
+					
+					let t1 = create_time_input(ident, 'time1', 'с ');
+					//t1.id = 'time1'+ident;
+					//t1.className = 'time';
+					//t1.type = 'time';
+					//if (ident < 10) {
+					//	t1.value = '0'+ident+':00';
+					//} else {
+					//	t1.value = ident+':00';
+					//}
+					d.appendChild(t1);
+					
+					let t2 = create_time_input(ident, 'time2', ' по ');
+					//t2.id = 'end'+ident;
+					//t2.type = 'time';
+					//if (ident < 10) {
+					//	t2.value = '0'+ident+':00';
+					//} else {
+					//	t2.value = ident+':00';
+					//}
+					d.appendChild(t2);
 
-			//let s3 = document.createElement('span');
-			//s3.innerHTML = ' доза  '
-			//d.appendChild(s3);
+					//let s3 = document.createElement('span');
+					//s3.innerHTML = ' доза  '
+					//d.appendChild(s3);
 
-			let doza = document.createElement('input');
-			doza.id = 'doza'+ident;
-			doza.type = 'text';
-			doza.value = document.getElementById('doz').value;
-			d.appendChild(doza);
+					let doza = document.createElement('input');
+					doza.id = 'doza'+ident;
+					doza.type = 'text';
+					doza.value = document.getElementById('doz').value;
+					d.appendChild(doza);
+					var ol = document.getElementById('ol_'+id_ol);
+					ol.appendChild(l);
+				}
+				//alert(btnlist[i].className);
+			}
 			
 			
-			return l
+			//return l
 		}
 
 		function create_time_input(ident, pref, dop) {
 			let el_div = document.createElement('div');
-			el_div.className = 'col-sm-2';
+			//el_div.className = 'col-sm-2';
 			let el_div_gr = document.createElement('div');
 			el_div_gr.className = 'input-group input-group-sm';
 			//el_div_gr.innerHTML = 'label for ${pref+ident}>${dop}</label><input id=${pref+ident} class="form-control clfc" type="text"><button>';			
