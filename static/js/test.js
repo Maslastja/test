@@ -103,7 +103,6 @@
 		
 		function creatediv(id_ol) {
 			var btnlist = $('.txt1_btn');
-			alert(id_ol)
 			for (i in btnlist) {
 				//alert(btnlist[i].className)
 				//alert($('#b'+id_btn).hasClass('btn-primary'))
@@ -115,7 +114,7 @@
 					l.setAttribute('data-sort', ident);
 			
 					let d = document.createElement('div');
-					d.className = 'form-group row';
+					d.className = 'form-group';
 					l.appendChild(d);
 					
 					//let d1 = document.createElement('div');
@@ -125,7 +124,7 @@
 					//d1.appendChild(s1);
 					//d.appendChild(d1);
 					
-					let t1 = create_time_input(ident, 'time1', 'с ');
+					let t1 = create_time_input(ident, 'time1', 'с ', id_ol);
 					//t1.id = 'time1'+ident;
 					//t1.className = 'time';
 					//t1.type = 'time';
@@ -136,7 +135,7 @@
 					//}
 					d.appendChild(t1);
 					
-					let t2 = create_time_input(ident, 'time2', ' по ');
+					let t2 = create_time_input(ident, 'time2', ' по ', id_ol);
 					//t2.id = 'end'+ident;
 					//t2.type = 'time';
 					//if (ident < 10) {
@@ -151,7 +150,7 @@
 					//d.appendChild(s3);
 
 					let doza = document.createElement('input');
-					doza.id = 'doza'+ident;
+					doza.id = id_ol+'_doza'+ident;
 					doza.type = 'text';
 					doza.value = document.getElementById('doz').value;
 					d.appendChild(doza);
@@ -165,7 +164,7 @@
 			//return l
 		}
 
-		function create_time_input(ident, pref, dop) {
+		function create_time_input(ident, pref, dop, id_ol) {
 			let el_div = document.createElement('div');
 			//el_div.className = 'col-sm-2';
 			let el_div_gr = document.createElement('div');
@@ -179,7 +178,7 @@
 			//el_div_gr.appendChild(el_lb);
 
 			let el_input = document.createElement('input');
-			el_input.id = 'clock_'+pref+'-'+ident;
+			el_input.id = id_ol+'_clock_'+pref+'-'+ident;
 			el_input.readOnly = true;
 			el_input.className = 'form-control clfc';
 			el_input.type = 'text';
