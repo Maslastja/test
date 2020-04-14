@@ -11,42 +11,45 @@
 		<script src={{ url_for('static',filename='js/clockface.js') }}></script> 
 	</head>
 	<body>
-		<form id='form' action='' method='post' class='form' novalidate>
+		<form id='form' action='' method='post' class='form-inline' novalidate>
 			<div class='container-fluid'>
-			<div class='col-md-6'>
-				<div class='row'>
-					<div class='form-group sm-text col-md-2'>
-						<label for='lp'>ЛП</label>
-						<input name='lp' id='lp' type='text'>
-					</div>
-					<div class='form-group col-md-1 sm-text'>
-						<label for='doz'>доза</label>
-						<input name='doz' id='doz' type='text' class='small'>	
-					</div>
-					<div class='form-group col-md-2 sm-text'>
-						<label for='date-start'>принимать с</label>
-						<input name='date-start' id='date-start' type='date' class='form-control'>	
-					</div>
-					<div class='form-group col-md-3 sm-text'>
-						<label for='days-count'>кол-во дней</label>
-						<input name='days-count' id='days-count' type='number' class='form-control small'>	
-					</div>
-					<div id='time-box' class='form-group sm-text col-md-11'>
-						<label for='time-box'>время приема</label>
-						<div id='time-box' class='input-group input-group-sm'>
-							<input id='txt1' type='text' class='form-control' disabled value=0>
-							<div class='input-group-btn'>		
-								{% for i in range(24) %}
-									<button type='button' id='b{{ i+1 }}' class='btn btn-default txt1_btn' onclick='change_class_btn({{ i+1 }}, "txt1")'>{{ i+1 }}</button>
-								{% endfor %}
+				<div class="row">
+					<div class='col-md-6'>
+						<div class='row'>
+							<div class='form-group sm-text col-md-2'>
+								<label for='lp'>ЛП</label>
+								<input name='lp' id='lp' type='text'>
+							</div>
+							<div class='form-group col-md-1 sm-text'>
+								<label for='doz'>доза</label>
+								<input name='doz' id='doz' type='text' class='small'>	
+							</div>
+							<div class='form-group col-md-2 sm-text'>
+								<label for='date-start'>принимать с</label>
+								<input name='date-start' id='date-start' type='date' class='form-control'>	
+							</div>
+							<div class='form-group col-md-3 sm-text'>
+								<label for='days-count'>кол-во дней</label>
+								<input name='days-count' id='days-count' type='number' class='form-control small'>	
+							</div>
+							<div id='time-box' class='form-group sm-text col-md-11'>
+								<label for='time-box'>время приема</label>
+								<div id='time-box' class='input-group input-group-sm'>
+									<input id='txt1' type='text' class='form-control' disabled value=0>
+									<div class='input-group-btn'>		
+										{% for i in range(24) %}
+											<button type='button' id='b{{ i+1 }}' class='btn btn-default txt1_btn' onclick='change_class_btn({{ i+1 }}, "txt1")'>{{ i+1 }}</button>
+										{% endfor %}
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
+					<button id='add_lp' type='button' class='btn btn-default'><i class='glyphicon glyphicon-plus'></i></button>
 				</div>
-				</div>
-				<button id='add_lp' type='button' class='btn btn-default'><i class='glyphicon glyphicon-plus'></i></button>
+				<br>
 				<div id='prep' class='row col-md-10'>				
-					<div id='lp-list' class='list-group col-md-3'></div>
+					<div id='lp-list' class='list-group col-md-2'></div>
 					<div id='lp-info' class='col-md-7'></div>
 				</div>
 				{#<div>			
