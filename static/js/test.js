@@ -38,26 +38,83 @@
 			
 			//добавление блока с разбивкой по времени 
 			var new_div = document.createElement('div');
-			//new_div.className = 'col-md-3';	
+			new_div.className = 'container';	
 			new_div.id = 'lp_times_'+countlist;
 
+			let div1r = document.createElement('div');
+			div1r.className = 'row row-m-t';
 			let div1 = document.createElement('div');
+			div1.className = 'form-group';
+			let txt1 = document.createTextNode('дата начала приема ');
+			let sp1 = document.createElement('span');
+			sp1.appendChild(txt1);
+			div1.appendChild(sp1);
 			let d1 = document.createElement('input');
 			d1.type = 'date';
-			d1.innerHTML = '01.01.0001';
+			d1.className = 'form-control';
+			d1.value = $('#date-start')[0].value;
+			d1.setAttribute('required', '');
 			div1.appendChild(d1);
+
+			let txt2 = document.createTextNode(' количество дней приема ');
+			let sp2 = document.createElement('span');
+			sp2.appendChild(txt2);
+			div1.appendChild(sp2);
 
 			let count = document.createElement('input');
 			count.type = 'number';
+			count.className = 'form-control small';
+			count.value = $('#days-count')[0].value; 
 			div1.appendChild(count);
-			new_div.appendChild(div1);
+			div1r.appendChild(div1);
+			new_div.appendChild(div1r);
 
+			let div2r = document.createElement('div');
+			div2r.className = 'row row-m-t';
 			let div2 = document.createElement('div');
+			div2.className = 'form-group';
+			let txt3 = document.createTextNode('дата отмены ');
+			let sp3 = document.createElement('span');
+			sp3.appendChild(txt3);
+			div2.appendChild(sp3);
 			let d2 = document.createElement('input');
 			d2.type = 'date';
-			d2.innerHTML = '01.01.0001';
+			d2.className = 'form-control';
+			d2.value = '0001-01-01';
+			d2.setAttribute('required', '');
 			div2.appendChild(d2);
-			new_div.appendChild(div2);
+			let lab2 = document.createElement('label');
+			lab2.for = 'form-group';
+			div2r.appendChild(div2);
+			new_div.appendChild(div2r);
+
+			let div3r = document.createElement('div');
+			div3r.className = 'row row-m-t';
+			let div3 = document.createElement('div');
+			let txt4 = document.createTextNode('время приема:');
+			let sp4 = document.createElement('span');
+			sp4.appendChild(txt4);
+			div3r.appendChild(sp4);
+			new_div.appendChild(div3r);
+
+			let div4r = document.createElement('div');
+			div4r.className = 'row row-m-t';
+			let div4 = document.getElementById('time-box-inp').cloneNode(true);
+			div4.id = 'lp_times_'+countlist+'-'+div4.id;
+			let txt_count = div4.querySelector('input');
+			txt_count.id = 'lp_times_'+countlist+'-'+'txt';
+			let elems_b = div4.querySelectorAll('button.txt1_btn');
+			for (let i = 0; i < elems_b.length; i++) {
+				elems_b[i].id = 'lp_times_'+countlist+'-'+elems_b[i].id;
+				elems_b[i].setAttribute('onclick', 'change_class_btn("'+elems_b[i].id+'", "'+'lp_times_'+countlist+'-'+'txt'+'")');
+			}
+			//div4.className = 'form-group sm-text col-md-11';
+			//div4.id = 'time-box';
+			//let div4inp = document.createElement('div');
+			//div4inp.className = 'input-group input-group-sm';
+			//div4inp.id = 'time-box';
+			div4r.appendChild(div4);
+			new_div.appendChild(div4r);
 
 			new_ol = document.createElement('ol');
 			new_ol.id = 'ol_lp_times_'+countlist;
@@ -123,11 +180,16 @@
 		get_value_schema();
 	}
 		
-	function change_class_btn(ident, idtxt) { 
-		$('#b'+ident).toggleClass('btn-default btn-primary'); 
-		var k = 0;			
+	function change_class_btn(idb, idtxt) { 
+		$('#'+idb).toggleClass('btn-default btn-primary'); 
+		var k = 0;	
+		if (idb.indexOf('-') != -1) {
+			var block = idb.split('-')[0]+'-';	
+		} else {
+			var block = '';
+		}	
 		for (let i = 1; i < 25; i++) {
-			if ($('#b'+i).hasClass('btn-primary')) {
+			if ($('#'+block+'b'+i).hasClass('btn-primary')) {
 				k ++;
 			}
 		}
@@ -135,7 +197,7 @@
 	}		
 		
 		function create_list(id_ol) {
-			var btnlist = $('.txt1_btn');
+			var btnlist = $('#'+id_ol+' .txt1_btn');
 			for (i in btnlist) {
 				//alert(btnlist[i].className)
 				//alert($('#b'+id_btn).hasClass('btn-primary'))
@@ -143,7 +205,7 @@
 					var l = document.createElement('li');
 					ident = Number(i)+1;
 					l.id = 'li'+ident;
-					l.className = 'ellist';
+					l.className = 'ellist row-m-t';
 					l.setAttribute('data-sort', ident);
 			
 					let d = document.createElement('div');
@@ -151,25 +213,32 @@
 					l.appendChild(d);
 					
 					let txt1 = document.createTextNode('c ');
-					d.appendChild(txt1);
+					let sp1 = document.createElement('span');
+					sp1.appendChild(txt1);
+					d.appendChild(sp1);
 
 					let t1 = create_time_input(ident, 'time1', id_ol);
 					d.appendChild(t1);
 					
 					let txt2 = document.createTextNode(' по ');
-					d.appendChild(txt2);	
+					let sp2 = document.createElement('span');
+					sp2.appendChild(txt2);
+					d.appendChild(sp2);	
 
 					let t2 = create_time_input(ident, 'time2', id_ol);
 					d.appendChild(t2);
 
 					let txt3 = document.createTextNode(' доза ');
-					d.appendChild(txt3);
+					let sp3 = document.createElement('span');
+					sp3.appendChild(txt3);
+					d.appendChild(sp3);
 
 					let el_div = document.createElement('div');
 					el_div.className = 'input-group col-md-2';
 					let doza = document.createElement('input');
 					doza.id = id_ol+'_doza'+ident;
 					doza.type = 'text';
+					doza.className = 'small';
 					doza.value = document.getElementById('doz').value;
 					el_div.appendChild(doza);
 					d.appendChild(el_div);
@@ -218,6 +287,7 @@
 		}	
 	
 	function check_time() {
+           // alert(event.target.id)
 		var times = $('.clfc');
 		//alert(times)
 		for (let i = 0; i < times.length; i++) {

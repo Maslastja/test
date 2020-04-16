@@ -7,5 +7,9 @@
 }
 
 input.small {
-	width: 60px;
+	width: 70px !important;
+}
+
+.row-m-t{
+  margin-top : 5px
 }
