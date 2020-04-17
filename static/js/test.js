@@ -30,7 +30,7 @@
         	let b = document.createElement('button');
 			b.className = 'list-group-item';
 			b.type = 'button';
-			b.id = 'lp'+countlist;
+			b.id = 'lp_'+countlist;     //возможно вместо countlist стоит указывать id лек преп
 			b.innerHTML = $('#lp')[0].value;
 			b.setAttribute('onclick', 'click_lp()');
 			let sp = document.getElementById('lp-list');
@@ -39,7 +39,8 @@
 			//добавление блока с разбивкой по времени 
 			var new_div = document.createElement('div');
 			new_div.className = 'container';	
-			new_div.id = 'lp_times_'+countlist;
+			//new_div.id = 'lp_times_'+countlist;
+			new_div.setAttribute('owner', 'lp_'+countlist);
 
 			let div1r = document.createElement('div');
 			div1r.className = 'row row-m-t';
@@ -98,30 +99,27 @@
 			new_div.appendChild(div3r);
 
 			let div4r = document.createElement('div');
-			div4r.className = 'row row-m-t';
+			div4r.className = 'row  col-md-9 row-m-t';
 			let div4 = document.getElementById('time-box-inp').cloneNode(true);
-			div4.id = 'lp_times_'+countlist+'-'+div4.id;
+			//div4.id = 'lp_times_'+countlist+'-'+div4.id;
+			//div4.setAttribute('owner', 'lp_'+countlist);
 			let txt_count = div4.querySelector('input');
-			txt_count.id = 'lp_times_'+countlist+'-'+'txt';
-			let elems_b = div4.querySelectorAll('button.txt1_btn');
+			txt_count.setAttribute('owner', 'lp_'+countlist);
+			let elems_b = div4.querySelectorAll('button.txt_btn');
 			for (let i = 0; i < elems_b.length; i++) {
-				elems_b[i].id = 'lp_times_'+countlist+'-'+elems_b[i].id;
-				elems_b[i].setAttribute('onclick', 'change_class_btn("'+elems_b[i].id+'", "'+'lp_times_'+countlist+'-'+'txt'+'")');
+				//elems_b[i].id = 'lp_times_'+countlist+'-'+elems_b[i].id;
+				elems_b[i].setAttribute('owner', 'lp_'+countlist);
 			}
-			//div4.className = 'form-group sm-text col-md-11';
-			//div4.id = 'time-box';
-			//let div4inp = document.createElement('div');
-			//div4inp.className = 'input-group input-group-sm';
-			//div4inp.id = 'time-box';
 			div4r.appendChild(div4);
 			new_div.appendChild(div4r);
 
 			new_ol = document.createElement('ol');
-			new_ol.id = 'ol_lp_times_'+countlist;
+			new_ol.id = 'ol';
+			new_ol.setAttribute('owner', 'lp_'+countlist);
 			new_div.appendChild(new_ol);
 
 			document.getElementById('lp-info').appendChild(new_div);
-			create_list('lp_times_'+countlist);
+			create_list('lp_'+countlist);
 		});
 		
  	  
@@ -165,95 +163,101 @@
 		$('#'+ident_clock).clockface('toggle');
 	}
      		
-	//не используется
-	function clickbtn(ident, idtxt) {
-		change_class_btn(ident, idtxt);
+	
+	function clickbtn(idtxt) {
+		var owner = event.target.getAttribute('owner');
+		change_class_btn(idtxt, owner);
 
-		if ($('#b'+ident).hasClass('btn-primary')) {
-			divs = creatediv(ident);
-			document.getElementById('bl1').appendChild(divs);
-		} else {
-			$('#li'+ident).remove();	
-		}
+		if (owner != 'general') {
+			//if ($('#b'+ident).hasClass('btn-primary')) {
+			if (! document.querySelector('[id="li'+event.target.id.slice(1)+'"][owner="'+owner+'"]')) {
+				create_list_element(event.target.id.slice(1), owner);
+			} else {
+				$('[id=li'+event.target.id.slice(1)+'][owner='+owner+']').remove();	
+			}
 			
-		sort_list();			
-		get_value_schema();
+			sort_list(owner);			
+			//get_value_schema();
+		}
 	}
 		
-	function change_class_btn(idb, idtxt) { 
-		$('#'+idb).toggleClass('btn-default btn-primary'); 
+	function change_class_btn(idtxt, owner) { 
+		$('[id='+event.target.id+'][owner='+owner+']').toggleClass('btn-default btn-primary');
 		var k = 0;	
-		if (idb.indexOf('-') != -1) {
-			var block = idb.split('-')[0]+'-';	
-		} else {
-			var block = '';
-		}	
 		for (let i = 1; i < 25; i++) {
-			if ($('#'+block+'b'+i).hasClass('btn-primary')) {
+			if ($('[id=b'+i+'][owner='+owner+']').hasClass('btn-primary')) {
 				k ++;
 			}
 		}
-		$('#'+idtxt)[0].value = k;
+		$('[id='+idtxt+'][owner='+owner+']')[0].value = k;
+
 	}		
 		
-		function create_list(id_ol) {
-			var btnlist = $('#'+id_ol+' .txt1_btn');
+		function create_list(owner) {
+			var btnlist = $('[owner="'+owner+'"][class*="txt_btn"]');
 			for (i in btnlist) {
-				//alert(btnlist[i].className)
+				//alert(btnlist[i])
 				//alert($('#b'+id_btn).hasClass('btn-primary'))
 				if ($('#'+btnlist[i].id).hasClass('btn-primary')) {
-					var l = document.createElement('li');
 					ident = Number(i)+1;
-					l.id = 'li'+ident;
-					l.className = 'ellist row-m-t';
-					l.setAttribute('data-sort', ident);
-			
-					let d = document.createElement('div');
-					d.className = 'form-group';
-					l.appendChild(d);
-					
-					let txt1 = document.createTextNode('c ');
-					let sp1 = document.createElement('span');
-					sp1.appendChild(txt1);
-					d.appendChild(sp1);
-
-					let t1 = create_time_input(ident, 'time1', id_ol);
-					d.appendChild(t1);
-					
-					let txt2 = document.createTextNode(' по ');
-					let sp2 = document.createElement('span');
-					sp2.appendChild(txt2);
-					d.appendChild(sp2);	
-
-					let t2 = create_time_input(ident, 'time2', id_ol);
-					d.appendChild(t2);
-
-					let txt3 = document.createTextNode(' доза ');
-					let sp3 = document.createElement('span');
-					sp3.appendChild(txt3);
-					d.appendChild(sp3);
-
-					let el_div = document.createElement('div');
-					el_div.className = 'input-group col-md-2';
-					let doza = document.createElement('input');
-					doza.id = id_ol+'_doza'+ident;
-					doza.type = 'text';
-					doza.className = 'small';
-					doza.value = document.getElementById('doz').value;
-					el_div.appendChild(doza);
-					d.appendChild(el_div);
-					var ol = document.getElementById('ol_'+id_ol);
-					ol.appendChild(l);
+					create_list_element(ident, owner);
 				}
 			}
 		}
 
-		function create_time_input(ident, pref, id_ol) {
+		function create_list_element(ident, owner) {
+			var l = document.createElement('li');
+			l.id = 'li'+ident;
+			l.setAttribute('owner', owner);
+			l.className = 'ellist';
+			l.setAttribute('data-sort', ident);
+			
+			let d = document.createElement('div');
+			d.className = 'form-group row-m-t';
+			l.appendChild(d);
+				
+			let txt1 = document.createTextNode('c ');
+			let sp1 = document.createElement('span');
+			sp1.appendChild(txt1);
+			d.appendChild(sp1);
+
+			let t1 = create_time_input(ident, 'time1', owner);
+			d.appendChild(t1);
+					
+			let txt2 = document.createTextNode(' по ');
+			let sp2 = document.createElement('span');
+			sp2.appendChild(txt2);
+			d.appendChild(sp2);	
+
+			let t2 = create_time_input(ident, 'time2', owner);
+			d.appendChild(t2);
+
+			let txt3 = document.createTextNode(' доза ');
+			let sp3 = document.createElement('span');
+			sp3.appendChild(txt3);
+			d.appendChild(sp3);
+
+			let el_div = document.createElement('div');
+			el_div.className = 'input-group col-md-2';
+			let doza = document.createElement('input');
+			doza.id = 'doza_'+ident;
+			doza.type = 'text';
+			doza.className = 'small';
+			doza.value = document.getElementById('doz').value;
+			el_div.appendChild(doza);
+			d.appendChild(el_div);
+			var ol = document.querySelector('[id=ol][owner='+owner+']');
+			ol.appendChild(l);
+
+		}
+
+		function create_time_input(ident, pref, owner) {
 			let el_div = document.createElement('div');
 			el_div.className = 'input-group col-md-2';
 
 			let el_input = document.createElement('input');
-			el_input.id = 'clock_'+pref+'_'+id_ol+'-'+ident;
+			el_input.id = 'clock_'+pref+'-'+ident;
+			el_input.setAttribute('owner', owner);
 			el_input.readOnly = true;
 			el_input.className = 'form-control clfc';
 			el_input.type = 'text';
@@ -271,12 +275,14 @@
 			let el_btn = document.createElement('button');
 			el_btn.className = 'btn btn-default toggle-btn';
 			el_btn.type = 'button';
-			el_btn.id = 'btn_clock_'+pref+'_'+id_ol+'-'+ident;
+			el_btn.id = 'btn_clock_'+pref+'-'+ident;
+			el_btn.setAttribute('owner', owner);
 			el_btn.setAttribute('onclick','clickbtn_clock()');
 			
 			let el_ico = document.createElement('i');
 			el_ico.className = 'glyphicon glyphicon-time';
-			el_ico.id = 'ico_clock_'+pref+'_'+id_ol+'-'+ident;
+			el_ico.id = 'ico_clock_'+pref+'-'+ident;
+			el_ico.setAttribute('owner', owner);
 			el_ico.setAttribute('onclick','clickbtn_clock()');
 			el_btn.appendChild(el_ico);
 			el_div_btn.appendChild(el_btn);
@@ -364,13 +370,13 @@
 		get_value_schema();
 	}
 	
-	function sort_list() {
-			items = $('.ellist');
+	function sort_list(owner) {
+			items = $('[class*="ellist"][owner='+owner+']');
 			arItems = $.makeArray(items);
 			arItems .sort(function(a, b) {
 				return $(a).data("sort") - $(b).data("sort")
 			});
-			$(arItems).appendTo("#bl1");	
+			$(arItems).appendTo('[id=ol][owner='+owner+']');	
 	}
 	
 	function get_value_schema() {
