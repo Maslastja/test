@@ -240,7 +240,8 @@
 			let el_div = document.createElement('div');
 			el_div.className = 'input-group col-md-2';
 			let doza = document.createElement('input');
-			doza.id = 'doza_'+ident;
+			doza.id = 'doza-'+ident;
+			doza.setAttribute('owner', owner);
 			doza.type = 'text';
 			doza.className = 'small';
 			doza.value = document.getElementById('doz').value;
@@ -292,9 +293,10 @@
 
 		}	
 	
-	function check_time() {
-           // alert(event.target.id)
-		var times = $('.clfc');
+	function check_time(owner) {
+
+        //var owner = event.target.getAttribute('owner');
+		var times = $('[class*="clfc"][owner='+owner+']');
 		//alert(times)
 		for (let i = 0; i < times.length; i++) {
 			var hour = '';
@@ -331,11 +333,11 @@
 			if (times[i].id.indexOf('time1') != -1 & hour1 != times[i].id.split('-')[1]) {
 				//alert(times[i].id)
 				//alert(hour1)
-				let idsrc = times[i].id.split('-')[1]+'-'+hour1;
+				let idsrc = times[i].id.split('-')[0]+'-'+hour1;
 				if (! document.getElementById(idsrc)) {
-					change_id(times[i].id, hour1);
+					change_id(times[i].id.split('-')[1], hour1, owner);
 				} else {
-					alert('время приема <'+hour1+' часа> уже указано');
+					alert('время приема <'+hour1+' ч.> уже указано');
 					times[i].value = hour + times[i].value.slice(2); 				
 				}
 			}
@@ -344,30 +346,31 @@
 	
 	var list_for_change_id = ['li',
 									'clock_time1-',
-									'toggle-btn_time1-',
-									'ico_time1-',
+									'btn_clock_time1-',
+									'ico_clock_time1-',
 									'clock_time2-',
-									'toggle-btn_time2-',
-									'ico_time2-',
-									'doza'
+									'btn_clock_time2-',
+									'ico_clock_time2-',
+									'doza-'
 									];
 	
-	function change_id(old_id, new_id) {	
+	function change_id(old_id, new_id, owner) {	
 		for (i in list_for_change_id) {
-			//alert(list_for_change_id[i]+old_id)
-			elem = document.getElementById(list_for_change_id[i]+old_id);	
+			//alert('[id="'+list_for_change_id[i]+old_id+'"][owner="'+owner+'"]')
+			elem = document.querySelector('[id="'+list_for_change_id[i]+old_id+'"][owner="'+owner+'"]');
+			//alert(elem)	
 			if (list_for_change_id[i] == 'li') {
 				elem.setAttribute('data-sort', new_id);
-				$('#li'+old_id).data('sort', new_id);			
+				$('[id="li'+old_id+'"][owner="'+owner+'"]').data('sort', new_id);			
 			}
 			elem.id = list_for_change_id[i]+new_id;
 		}
-		$('#b'+old_id).removeClass("btn-primary");
-		$('#b'+old_id).addClass("btn-default");
-		$('#b'+new_id).removeClass("btn-default");	
-		$('#b'+new_id).addClass("btn-primary");
-		sort_list();
-		get_value_schema();
+		$('[id="b'+old_id+'"][owner="'+owner+'"]').removeClass("btn-primary");
+		$('[id="b'+old_id+'"][owner="'+owner+'"]').addClass("btn-default");
+		$('[id="b'+new_id+'"][owner="'+owner+'"]').removeClass("btn-default");	
+		$('[id="b'+new_id+'"][owner="'+owner+'"]').addClass("btn-primary");
+		sort_list(owner);
+		//get_value_schema();
 	}
 	
 	function sort_list(owner) {

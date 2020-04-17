@@ -69,7 +69,8 @@
                   if(this === e.target) {
                     return;
                   }
-                  check_time();
+                  //alert($('.clockface-open').attr('owner'))
+                  check_time($('.clockface-open').attr('owner'));
                    $(this).clockface('hide');
                 });
             }, this));
@@ -120,8 +121,9 @@
         toggles show/hide
         */
         toggle: function(value) {
+          //alert(this.$clockface)
           if(this.$clockface.is(':visible')) {
-           check_time();
+           check_time($('.clockface-open').attr('owner'));
            this.hide();
           } else {
             this.show(value);
