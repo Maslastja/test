@@ -8,7 +8,8 @@
 		alert(123)  
 				e.stopPropagation();
 				let ident_clock = e.target.id.split('_')[1];
-				$('#clock_'+ident_clock).clockface('toggle');
+				let owner = e.target.getAttribute('owner');
+				$('[id=clock_'+ident_clock+'][owner='+owner+']').clockface('toggle');
 		});
         
 		$('#add_lp').click(function(e){ 
@@ -120,6 +121,13 @@
 
 			document.getElementById('lp-info').appendChild(new_div);
 			create_list('lp_'+countlist);
+
+			var btngen = $('[class*="btn-primary"][owner="general"]');
+			for (let i = 0; i < btngen.length; i++) {
+				$('#'+btngen[i].id).removeClass('btn-primary');
+				$('#'+btngen[i].id).addClass('btn-default');	
+			}
+
 		});
 		
  	  
@@ -294,20 +302,20 @@
 		}	
 	
 	function check_time(owner) {
-
-        //var owner = event.target.getAttribute('owner');
+	    //var owner = event.target.getAttribute('owner');
 		var times = $('[class*="clfc"][owner='+owner+']');
 		//alert(times)
 		for (let i = 0; i < times.length; i++) {
-			var hour = '';
-			if (times[i].id.split('-')[1] < 10) {
-				hour = '0'+times[i].id.split('-')[1];
+			var id_time = times[i].id.split('-')[1];
+    		var hour = '';
+			if (id_time < 10) {
+				hour = '0'+id_time;
 			} else {
-				hour = times[i].id.split('-')[1];
+				hour = id_time;
 			}
 			if (times[i].value.length < 4) {
 				if (times[i].value.indexOf(':') == -1) {
-					if (times[i].value< 10) {
+					if (times[i].value < 10) {
 						hour = '0'+times[i].value;
 					} else {
 						hour = times[i].value;
@@ -320,7 +328,7 @@
 				times[i].value = '0'+times[i].value;
 			}	
 			
-			if (times[i].value[0] =='0') {
+			if (times[i].value[0] == '0') {
 				if (times[i].value[1] == '0') {
 					var hour1 = '24';	
 				} else {
@@ -330,18 +338,22 @@
 				var hour1 = times[i].value.slice(0,2);			
 			}
 			// менять id может только time1 (с), условие на несовпадение времени и id + условие что время не дублирует уже созданное время			
-			if (times[i].id.indexOf('time1') != -1 & hour1 != times[i].id.split('-')[1]) {
+			if (times[i].id.indexOf('time1') != -1 & hour1 != id_time) {
 				//alert(times[i].id)
 				//alert(hour1)
 				let idsrc = times[i].id.split('-')[0]+'-'+hour1;
-				if (! document.getElementById(idsrc)) {
-					change_id(times[i].id.split('-')[1], hour1, owner);
+				if (! document.querySelector('[id='+idsrc+'][owner='+owner+']')) {
+					change_id(id_time, hour1, owner);
+					id_time = hour1;
 				} else {
 					alert('время приема <'+hour1+' ч.> уже указано');
 					times[i].value = hour + times[i].value.slice(2); 				
 				}
 			}
+
 		}
+		// отрисовка промежутков при различии т1 и т2
+		check_intervals(owner);
 	}
 	
 	var list_for_change_id = ['li',
@@ -354,6 +366,39 @@
 									'doza-'
 									];
 	
+	function check_intervals(owner) {
+		var array_prim_btn = [];
+		for (let i = 0; i < $('[class="ellist"][owner='+owner+']').length; i++) {
+			var id_time = $('[class="ellist"][owner='+owner+']')[i].getAttribute('data-sort');
+			var h1 = Number($('[id="clock_time1-'+id_time+'"][owner='+owner+']')[0].value.split(':')[0]);
+			var h2 = Number($('[id="clock_time2-'+id_time+'"][owner='+owner+']')[0].value.split(':')[0]);
+			if (h1 == 0) {
+				h1 = 24;
+			}
+			if (h2 == 0) {
+				h2 = 24;
+			}
+			//console.log(h1);
+			//console.log(h2);
+			if (h1==h2 || h1 < h2) {
+				for (let k = h1; k < h2+1; k++) {
+					array_prim_btn.push(k);	
+				}
+			}
+		} 
+		console.log(array_prim_btn);
+		for (let i = 1; i < 25; i++) {
+			//console.log(i);
+			if (array_prim_btn.indexOf(i) != -1) {
+				$('[id="b'+i+'"][owner="'+owner+'"]').removeClass("btn-default");
+				$('[id="b'+i+'"][owner="'+owner+'"]').addClass("btn-primary");
+			} else {
+				$('[id="b'+i+'"][owner="'+owner+'"]').removeClass("btn-primary");
+				$('[id="b'+i+'"][owner="'+owner+'"]').addClass("btn-default");
+			}	
+		}
+	}
+
 	function change_id(old_id, new_id, owner) {	
 		for (i in list_for_change_id) {
 			//alert('[id="'+list_for_change_id[i]+old_id+'"][owner="'+owner+'"]')
