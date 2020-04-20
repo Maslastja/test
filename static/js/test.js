@@ -7,6 +7,10 @@
 		$('.toggle-btn').click(function(e){ 
 		alert(123)  
 				e.stopPropagation();
+				$('.clockface-open').each(function(){
+					alert(123)
+                    $(this).clockface('hide');
+                });
 				let ident_clock = e.target.id.split('_')[1];
 				let owner = e.target.getAttribute('owner');
 				$('[id=clock_'+ident_clock+'][owner='+owner+']').clockface('toggle');
@@ -164,6 +168,10 @@
 	});
     
 	function clickbtn_clock() {
+		$('.clockface-open').each(function(){
+           check_time($('.clockface-open').attr('owner'));
+           $(this).clockface('hide');
+        });
 		event.stopPropagation();
 		//let ident_clock = event.target.id.split('-')[1];
 		let ident_clock = event.target.id.slice(4);
@@ -378,17 +386,13 @@
 			if (h2 == 0) {
 				h2 = 24;
 			}
-			//console.log(h1);
-			//console.log(h2);
 			if (h1==h2 || h1 < h2) {
 				for (let k = h1; k < h2+1; k++) {
 					array_prim_btn.push(k);	
 				}
 			}
 		} 
-		console.log(array_prim_btn);
 		for (let i = 1; i < 25; i++) {
-			//console.log(i);
 			if (array_prim_btn.indexOf(i) != -1) {
 				$('[id="b'+i+'"][owner="'+owner+'"]').removeClass("btn-default");
 				$('[id="b'+i+'"][owner="'+owner+'"]').addClass("btn-primary");
