@@ -33,7 +33,7 @@
         	//$('#lp-list').append(bgr);
         	
         	let b = document.createElement('button');
-			b.className = 'list-group-item';
+			b.className = 'list-group-item active';
 			b.type = 'button';
 			b.id = 'lp_'+countlist;     //возможно вместо countlist стоит указывать id лек преп
 			b.innerHTML = $('#lp')[0].value;
@@ -131,7 +131,7 @@
 				$('#'+btngen[i].id).removeClass('btn-primary');
 				$('#'+btngen[i].id).addClass('btn-default');	
 			}
-
+			ch_class_lp_btn(countlist);
 		});
 		
  	  
@@ -444,20 +444,25 @@
 	
 	function click_lp() {
 		$('#'+event.target.id).addClass('active');
-		ev_btn = document.getElementById(event.target.id);
+		$('[class="container"][owner='+event.target.id+']').show();
+		//ev_btn = document.getElementById(event.target.id);
 		//new_btn = document.createElement('button');
 		//new_btn.type = 'button';
 		//new_i = document.createElement('i');
 		//new_i.className = 'glyphicon glyphicon-remove';
 		//new_btn.appendChild(new_i);
 		//ev_btn.appendChild(new_btn);
-
-		var countlist = $('.list-group-item');
-		//alert(times)
-		for (let i = 0; i < countlist.length; i++) {
-			if (i != event.target.id.slice(2)) {
-				$('#lp'+i).removeClass('active');
-			}
-		}
+		ch_class_lp_btn(Number(event.target.id.split('_')[1]));
 		
+	}
+
+	function ch_class_lp_btn(id) {
+		var countlist = $('.list-group-item');
+		for (let i = 0; i < countlist.length; i++) {
+			if (i != id) {
+				$('#lp_'+i).removeClass('active');
+				$('[class="container"][owner=lp_'+i+']').hide();
+			} 
+		}
+
 	}
