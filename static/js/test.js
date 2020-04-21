@@ -196,9 +196,11 @@
 		let owner = event.target.getAttribute('owner');
 		$('[class="container"][owner='+owner+']').remove();
 		$('#'+owner).remove();
-		$('#'+$('#lp-list button:last')[0].id).addClass('active');
-		$('[class="container"][owner='+$('#lp-list button:last')[0].id+']').show();
-		ch_class_lp_btn($('#lp-list button:last')[0].id);
+		if ($('#lp-list button:last').length != 0) {
+			$('#lp-list button:last').addClass('active');
+			$('[class="container"][owner='+$('#lp-list button:last')[0].id+']').show();
+			ch_class_lp_btn($('#lp-list button:last')[0].id);
+		}
 	}
      		
 	
