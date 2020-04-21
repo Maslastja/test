@@ -4,22 +4,22 @@
 				trigger: 'manual'
 		});   
      
-		$('.toggle-btn').click(function(e){ 
-		alert(123)  
-				e.stopPropagation();
-				$('.clockface-open').each(function(){
-					alert(123)
-                    $(this).clockface('hide');
-                });
-				let ident_clock = e.target.id.split('_')[1];
-				let owner = e.target.getAttribute('owner');
-				$('[id=clock_'+ident_clock+'][owner='+owner+']').clockface('toggle');
-		});
+		//$('.toggle-btn').click(function(e){ 
+		//alert(123)  
+		//		e.stopPropagation();
+		//		$('.clockface-open').each(function(){
+		//			alert(123)
+        //           $(this).clockface('hide');
+        //        });
+		//		let ident_clock = e.target.id.split('_')[1];
+		//		let owner = e.target.getAttribute('owner');
+		//		$('[id=clock_'+ident_clock+'][owner='+owner+']').clockface('toggle');
+		//});
         
 		$('#add_lp').click(function(e){ 
 			//!!! перед добавлением скорее всего следует делать проверки на заполненность необходимых полей
         	
-         	let countlist = $('.list-group-item').length;
+         	//let countlist = $('.list-group-item').length;
        		//let bgr = $('<div>', {
         	//			class: 'list-group-item btn-group'
         	//		    })
@@ -31,11 +31,12 @@
         	//		    	onclick: 'click_lp()'
         	//		    });
         	//$('#lp-list').append(bgr);
-        	
+        	let id_lp  = $('#lp')[0].value.replace(/\s+/g, ''); //для тестов просто убираем пробелы, далее предполагается уникальный id лек преп
+
         	let b = document.createElement('button');
 			b.className = 'list-group-item active';
 			b.type = 'button';
-			b.id = 'lp_'+countlist;     //возможно вместо countlist стоит указывать id лек преп
+			b.id = 'lp_'+id_lp;     
 			b.innerHTML = $('#lp')[0].value;
 			b.setAttribute('onclick', 'click_lp()');
 			let sp = document.getElementById('lp-list');
@@ -44,8 +45,7 @@
 			//добавление блока с разбивкой по времени 
 			var new_div = document.createElement('div');
 			new_div.className = 'container';	
-			//new_div.id = 'lp_times_'+countlist;
-			new_div.setAttribute('owner', 'lp_'+countlist);
+			new_div.setAttribute('owner', 'lp_'+id_lp);
 
 			let div1r = document.createElement('div');
 			div1r.className = 'row row-m-t';
@@ -106,32 +106,45 @@
 			let div4r = document.createElement('div');
 			div4r.className = 'row  col-md-9 row-m-t';
 			let div4 = document.getElementById('time-box-inp').cloneNode(true);
-			//div4.id = 'lp_times_'+countlist+'-'+div4.id;
-			//div4.setAttribute('owner', 'lp_'+countlist);
 			let txt_count = div4.querySelector('input');
-			txt_count.setAttribute('owner', 'lp_'+countlist);
+			txt_count.setAttribute('owner', 'lp_'+id_lp);
 			let elems_b = div4.querySelectorAll('button.txt_btn');
 			for (let i = 0; i < elems_b.length; i++) {
-				//elems_b[i].id = 'lp_times_'+countlist+'-'+elems_b[i].id;
-				elems_b[i].setAttribute('owner', 'lp_'+countlist);
+				elems_b[i].setAttribute('owner', 'lp_'+id_lp);
 			}
 			div4r.appendChild(div4);
 			new_div.appendChild(div4r);
 
+			let div5r = document.createElement('div');
+			div5r.className = 'row row-m-t';
 			new_ol = document.createElement('ol');
 			new_ol.id = 'ol';
-			new_ol.setAttribute('owner', 'lp_'+countlist);
-			new_div.appendChild(new_ol);
+			new_ol.setAttribute('owner', 'lp_'+id_lp);
+			div5r.appendChild(new_ol);
+			new_div.appendChild(div5r);
 
 			document.getElementById('lp-info').appendChild(new_div);
-			create_list('lp_'+countlist);
+			create_list('lp_'+id_lp);
+			
+			let div6r = document.createElement('div');
+			div6r.className = 'row row-m-t';
+        	let b_del = document.createElement('button');
+			b_del.className = 'btn btn-warning';
+			b_del.setAttribute('owner', 'lp_'+id_lp);
+			b_del.setAttribute('onclick', 'click_del()');
+			b_del.type = 'button';
+			b_del.id = 'btn_del';
+			b_del.innerHTML = 'Удалить';
+			
+			div6r.appendChild(b_del);
+			new_div.appendChild(div6r);
 
 			var btngen = $('[class*="btn-primary"][owner="general"]');
 			for (let i = 0; i < btngen.length; i++) {
 				$('#'+btngen[i].id).removeClass('btn-primary');
 				$('#'+btngen[i].id).addClass('btn-default');	
 			}
-			ch_class_lp_btn(countlist);
+			ch_class_lp_btn('lp_'+id_lp);
 		});
 		
  	  
@@ -177,6 +190,15 @@
 		let ident_clock = event.target.id.slice(4);
 		//alert(event.target.id.slice(4))  
 		$('#'+ident_clock).clockface('toggle');
+	}
+
+	function click_del() {
+		let owner = event.target.getAttribute('owner');
+		$('[class="container"][owner='+owner+']').remove();
+		$('#'+owner).remove();
+		$('#'+$('#lp-list button:last')[0].id).addClass('active');
+		$('[class="container"][owner='+$('#lp-list button:last')[0].id+']').show();
+		ch_class_lp_btn($('#lp-list button:last')[0].id);
 	}
      		
 	
@@ -452,16 +474,18 @@
 		//new_i.className = 'glyphicon glyphicon-remove';
 		//new_btn.appendChild(new_i);
 		//ev_btn.appendChild(new_btn);
-		ch_class_lp_btn(Number(event.target.id.split('_')[1]));
+		ch_class_lp_btn(event.target.id);
 		
 	}
 
 	function ch_class_lp_btn(id) {
+		//console.log('id '+id);
 		var countlist = $('.list-group-item');
 		for (let i = 0; i < countlist.length; i++) {
-			if (i != id) {
-				$('#lp_'+i).removeClass('active');
-				$('[class="container"][owner=lp_'+i+']').hide();
+		//	console.log('id i ' +countlist[i].id);
+			if (countlist[i].id != id) {
+				$('#'+countlist[i].id).removeClass('active');
+				$('[class="container"][owner='+countlist[i].id+']').hide();
 			} 
 		}
 
