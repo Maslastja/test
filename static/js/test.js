@@ -181,14 +181,21 @@
 	});
     
 	function clickbtn_clock() {
-		$('.clockface-open').each(function(){
-           check_time($('.clockface-open').attr('owner'));
-           $(this).clockface('hide');
-        });
 		event.stopPropagation();
-		//let ident_clock = event.target.id.split('-')[1];
-		let ident_clock = event.target.id.slice(4);
-		//alert(event.target.id.slice(4))  
+		var ident_clock = event.target.id.slice(4);
+		//console.log(event.target.id.slice(4))  
+		$('.clockface-open').each(function(){
+			//console.log($(this)[0].id)
+			if ($(this)[0].id != ident_clock) {
+				let one_row = $(this)[0].id.split('-')[1] == ident_clock .split('-')[1];
+           		check_time($('.clockface-open').attr('owner'));
+           		//console.log($(this)[0].id)
+           		$(this).clockface('hide');
+           		if (one_row) {
+           			ident_clock = ident_clock .split('-')[0]+'-'+$(this)[0].id.split('-')[1];	
+           		}
+       		}
+        });
 		$('#'+ident_clock).clockface('toggle');
 	}
 

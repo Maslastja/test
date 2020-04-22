@@ -123,6 +123,7 @@
         toggle: function(value) {
           //alert(this.$clockface)
           if(this.$clockface.is(':visible')) {
+           //alert('нажатие кнопки')
            check_time($('.clockface-open').attr('owner'));
            this.hide();
           } else {
