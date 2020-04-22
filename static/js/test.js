@@ -31,7 +31,11 @@
         	//		    	onclick: 'click_lp()'
         	//		    });
         	//$('#lp-list').append(bgr);
-        	let id_lp  = $('#lp')[0].value.replace(/\s+/g, ''); //для тестов просто убираем пробелы, далее предполагается уникальный id лек преп
+        	if ($('#lp-list button:last').length != 0) {
+        		var id_lp  = Number($('#lp-list button:last')[0].id.split('_')[1]) + 1; 
+        	} else {
+        		var id_lp  = 0;	
+        	}
 
         	let b = document.createElement('button');
 			b.className = 'list-group-item active';
@@ -213,32 +217,33 @@
 	
 	function clickbtn(idtxt) {
 		var owner = event.target.getAttribute('owner');
-		change_class_btn(idtxt, owner);
+		$('[id='+event.target.id+'][owner='+owner+']').toggleClass('btn-default btn-primary');
 
 		if (owner != 'general') {
 			//if ($('#b'+ident).hasClass('btn-primary')) {
 			if (! document.querySelector('[id="li'+event.target.id.slice(1)+'"][owner="'+owner+'"]')) {
-				create_list_element(event.target.id.slice(1), owner);
+				if ($('[id='+event.target.id+'][owner='+owner+']').hasClass('btn-primary')) {
+					create_list_element(event.target.id.slice(1), owner);
+				}
 			} else {
 				$('[id=li'+event.target.id.slice(1)+'][owner='+owner+']').remove();	
 			}
+			var k = $('[class=ellist][owner='+owner+']').length;
 			
 			sort_list(owner);			
 			//get_value_schema();
-		}
-	}
-		
-	function change_class_btn(idtxt, owner) { 
-		$('[id='+event.target.id+'][owner='+owner+']').toggleClass('btn-default btn-primary');
-		var k = 0;	
-		for (let i = 1; i < 25; i++) {
-			if ($('[id=b'+i+'][owner='+owner+']').hasClass('btn-primary')) {
-				k ++;
+		} else {
+			var k = 0;
+			for (let i = 1; i < 25; i++) {
+				if ($('[id=b'+i+'][owner='+owner+']').hasClass('btn-primary')) {
+					k ++;
+				}
 			}
+
 		}
 		$('[id='+idtxt+'][owner='+owner+']')[0].value = k;
-
-	}		
+	}
+		
 		
 		function create_list(owner) {
 			var btnlist = $('[owner="'+owner+'"][class*="txt_btn"]');
