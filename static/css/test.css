@@ -1,5 +1,5 @@
  
- .sm-text {
+  .sm-text {
    font-size: 11px !important; 
 }
 .xs-text {
@@ -13,3 +13,8 @@ input.small {
 .row-m-t{
   margin-top : 5px
 }
+
+i {
+  pointer-events: none;
+}
+

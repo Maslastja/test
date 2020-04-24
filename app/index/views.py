@@ -5,6 +5,8 @@ from app.models.testtable import Test
 from wtfpeewee.orm import model_form
 from wtforms.validators import (DataRequired, InputRequired)
 
+inp_method = {1: 'в/в', 2: 'в/м'}
+
 Form = model_form(
     Test,
     field_args={
@@ -21,7 +23,8 @@ Form = model_form(
             render_kw={'class': 'form-input', 'type': 'date'}),
         'schema': dict(
             # label='схема',
-            render_kw={'id': 'schema', 'class': 'form-input', 'type': 'text', 'style' : 'display: none'},
+            render_kw={'id': 'schema', 'class': 'form-input',
+                       'type': 'text', 'style': 'display: none'},
             validators=[DataRequired('не указано вреемя приема')]),
         'dayscount': dict(
             label='kol-vo',
@@ -30,28 +33,59 @@ Form = model_form(
     })
 
 
-def start_page():
+def lp_page():
     form = Form(request.form or None)
-    #if form.data2.data == '':
+    # if form.data2.data == '':
     #    form.data2.data = date(1,1,1)
-    #print(form.data2.data)
+    # print(form.data2.data)
     if request.method == 'POST':
-        #save_el()
+        # save_el()
         print(json.loads(request.data))
         #a = json.loads(request.form['schema'])
-        #for k in a:
+        # for k in a:
         #    print(a[k]['time1'])
-        #redirect(url_for('index.start_page'))
-    return render_template('index.html', title='test', form=form)
+        # redirect(url_for('index.start_page'))
+    return render_template('index.html', title='Процедурный лист', form=form,
+                           inp_method=inp_method)
+
+
+def table_page():
+    form = Form(request.form or None)
+    # if form.data2.data == '':
+    #    form.data2.data = date(1,1,1)
+    # print(form.data2.data)
+    if request.method == 'POST':
+        # save_el()
+        print(json.loads(request.data))
+        #a = json.loads(request.form['schema'])
+        # for k in a:
+        #    print(a[k]['time1'])
+        # redirect(url_for('index.start_page'))
+    return render_template('table.html', title='Процедурный лист', form=form)
+
+
+def analis_page():
+    form = Form(request.form or None)
+    # if form.data2.data == '':
+    #    form.data2.data = date(1,1,1)
+    # print(form.data2.data)
+    if request.method == 'POST':
+        # save_el()
+        print(json.loads(request.data))
+        #a = json.loads(request.form['schema'])
+        # for k in a:
+        #    print(a[k]['time1'])
+        # redirect(url_for('index.start_page'))
+    return render_template('analis.html', title='Процедурный лист', form=form)
 
 
 def save_el():
     lp = Test(lp=text,
-                typenews=form.typenews.data,
-                name=form.name.data,
-                isactive=form.isactive.data,
-                createdate=d,
-                changedate=d,
-                user=session.user.id)
+              typenews=form.typenews.data,
+              name=form.name.data,
+              isactive=form.isactive.data,
+              createdate=d,
+              changedate=d,
+              user=session.user.id)
     news.save()
     redirect(url_for('index.start_page'))
