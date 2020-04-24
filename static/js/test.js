@@ -143,11 +143,15 @@ $(function(){
 		div6r.appendChild(b_del);
 		new_div.appendChild(div6r);
 
+		// очистка ранее заполненных полей перед добавлением
 		var btngen = $('[class*="btn-primary"][owner="general"]');
 		for (let i = 0; i < btngen.length; i++) {
 			$('#'+btngen[i].id).removeClass('btn-primary');
 			$('#'+btngen[i].id).addClass('btn-default');	
 		}
+		$('[id="txt"][owner="general"]')[0].value = 0;
+		
+		//активация последнего добавленного лп
 		ch_class_lp_btn('lp_'+id_lp);
 	});
 	
@@ -230,19 +234,29 @@ function create_list_element(ident, owner) {
 	sp3.appendChild(txt3);
 	d.appendChild(sp3);
 
-	let el_div = document.createElement('div');
-	el_div.className = 'input-group col-md-2';
+	// let el_div = document.createElement('div');
+	// el_div.className = 'input-group col-md-2';
 	let doza = document.createElement('input');
 	doza.id = 'doza-'+ident;
 	doza.setAttribute('owner', owner);
 	doza.type = 'text';
 	doza.className = 'small';
 	doza.value = document.getElementById('doz').value;
-	el_div.appendChild(doza);
-	d.appendChild(el_div);
+	d.appendChild(doza);
+	//d.appendChild(el_div);
+
+	let txt4 = document.createTextNode(' способ ввода ');
+	let sp4 = document.createElement('span');
+	sp4.appendChild(txt4);
+	d.appendChild(sp4);
+
+	let inp = document.getElementById('inp-meth').cloneNode(true);
+	inp.id = 'inp-meth-'+ident;
+	inp.setAttribute('owner', owner);
+	d.appendChild(inp);
 	
 	let b_del = document.createElement('button');
-	b_del.className = 'btn btn-default';
+	b_del.className = 'btn btn-link';
 	b_del.id = 'b_del-'+ident;
 	b_del.type = 'button';
 	b_del.setAttribute('owner', owner);
@@ -355,7 +369,8 @@ var list_for_change_id = ['li',
 							'clock_time2-',
 							'btn_clock_time2-',
 							'b_del-',
-							'doza-'
+							'doza-',
+							'inp-meth-'
 							];
 
 function check_intervals(owner) {
@@ -440,6 +455,35 @@ function ch_class_lp_btn(id) {
 			$('#'+countlist[i].id).removeClass('active');
 			$('[class="container"][owner='+countlist[i].id+']').hide();
 		} 
+	}
+
+}
+
+
+function ch_btn_for_change_class(t1, t2, owner, id_row) {
+	for (let i = t1; i < t2+1; i++) {
+		var can_def = true;
+
+		var rows = $('[class="ellist"][owner="'+owner+'"]');
+		for (let k = 0; k < rows.length; k++) {
+			var id_row_loop = rows[k].getAttribute('data-sort');
+			if (id_row != id_row_loop) {
+				// console.log(id_row_loop);
+				// console.log(id_row);
+				let t1r = get_hour($('[id="clock_time1-'+id_row_loop+'"][owner="'+owner+'"]')[0]);
+				let t2r = get_hour($('[id="clock_time2-'+id_row_loop+'"][owner="'+owner+'"]')[0]);
+				// console.log(t1r)
+				// console.log(t2r)
+				// console.log(i)
+				if (i >= t1r & i <= t2r ) {
+					can_def = false;
+				}	
+			}
+		}
+		if (can_def) {
+			$('[id="b'+i+'"][owner="'+owner+'"]').removeClass('btn-primary');
+			$('[id="b'+i+'"][owner="'+owner+'"]').addClass('btn-default');
+		}
 	}
 
 }

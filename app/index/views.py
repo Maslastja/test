@@ -5,7 +5,7 @@ from app.models.testtable import Test
 from wtfpeewee.orm import model_form
 from wtforms.validators import (DataRequired, InputRequired)
 
-inp_method = {1: 'в/в', 2: 'в/м'}
+inp_method = {1: 'табл.', 2: 'в/в', 3: 'в/м'}
 
 Form = model_form(
     Test,

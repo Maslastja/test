@@ -1,13 +1,17 @@
  
-  .sm-text {
+ .sm-text {
    font-size: 11px !important; 
 }
 .xs-text {
    font-size: x-small !important; 
 }
 
+input.date {
+	width: 130px !important;
+}
+
 input.small {
-	width: 70px !important;
+	width: 100px !important;
 }
 
 .row-m-t{
@@ -18,3 +22,17 @@ i {
   pointer-events: none;
 }
 
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator {
+    padding: 0px;
+}
+
+input[type='number'],
+input[type='date'] {
+    -moz-appearance: textfield;
+}

@@ -35,7 +35,18 @@ function click_del() {
 // кнопка нажатия времени 1-24
 function clickbtn(idtxt) {
 	var owner = event.target.getAttribute('owner');
-	$('[id='+event.target.id+'][owner='+owner+']').toggleClass('btn-default btn-primary');
+	if ($('[id='+event.target.id+'][owner='+owner+']').hasClass('btn-primary') & owner != 'general' & $('[id=li'+event.target.id.slice(1)+'][owner='+owner+']').length != 0) {
+		let t1 = get_hour($('[id=clock_time1-'+event.target.id.slice(1)+'][owner='+owner+']')[0]);
+		let t2 = get_hour($('[id=clock_time2-'+event.target.id.slice(1)+'][owner='+owner+']')[0]);
+		console.log(t1);
+		console.log(t2);
+		ch_btn_for_change_class(t1, t2, owner, event.target.id.slice(1));
+		// for (let k = t1; k < t2+1; k++) {
+		// 	$('[id=b'+k+'][owner='+owner+']').toggleClass('btn-default btn-primary');
+		// }	
+	} else {
+		$('[id='+event.target.id+'][owner='+owner+']').toggleClass('btn-default btn-primary');
+	}	
 
 	if (owner != 'general') {
 		//if ($('#b'+ident).hasClass('btn-primary')) {
@@ -76,30 +87,8 @@ function click_del_row() {
 
 	var t1 = get_hour($('[id="clock_time1-'+id_row+'"][owner="'+owner_row+'"]')[0]);
 	var t2 = get_hour($('[id="clock_time2-'+id_row+'"][owner="'+owner_row+'"]')[0]);
-	for (let i = t1; i < t2+1; i++) {
-		var can_def = true;
-
-		var rows = $('[class="ellist"][owner="'+owner_row+'"]');
-		for (let k = 0; k < rows.length; k++) {
-			var id_row_loop = rows[k].getAttribute('data-sort');
-			if (id_row != id_row_loop) {
-				// console.log(id_row_loop);
-				// console.log(id_row);
-				let t1r = get_hour($('[id="clock_time1-'+id_row_loop+'"][owner="'+owner_row+'"]')[0]);
-				let t2r = get_hour($('[id="clock_time2-'+id_row_loop+'"][owner="'+owner_row+'"]')[0]);
-				// console.log(t1r)
-				// console.log(t2r)
-				// console.log(i)
-				if (i >= t1r & i <= t2r ) {
-					can_def = false;
-				}	
-			}
-		}
-		if (can_def) {
-			$('[id="b'+i+'"][owner="'+owner_row+'"]').removeClass('btn-primary');
-			$('[id="b'+i+'"][owner="'+owner_row+'"]').addClass('btn-default');
-		}
-	}
+	ch_btn_for_change_class(t1, t2, owner_row, id_row);
 	$('[id="li'+id_row+'"][owner="'+owner_row+'"]').remove();	
 	//sort_list(owner_row);
 }
+
