@@ -31,21 +31,28 @@ $(function(){
     	//		    	onclick: 'click_lp()'
     	//		    });
     	//$('#lp-list').append(bgr);
-    	if ($('#lp-list button:last').length != 0) {
-    		var id_lp  = Number($('#lp-list button:last')[0].id.split('_')[1]) + 1; 
+    	if ($('#lp-list div.row:last').length != 0) {
+    		var id_lp  = Number($('#lp-list div.row:last')[0].id.split('lp_')[1]) + 1; 
     	} else {
     		var id_lp  = 0;	
     	}
 
+    	let div_r_b = document.createElement('div');
+		div_r_b.className = 'row';
+		div_r_b.id = 'row_lp_'+id_lp;
+    	let div_b = document.createElement('div');
+		div_b.className = 'col-md-10';
     	let b = document.createElement('button');
 		b.className = 'list-group-item active';
 		b.type = 'button';
 		b.id = 'lp_'+id_lp;     
 		b.innerHTML = $('#lp')[0].value;
 		b.setAttribute('onclick', 'click_lp()');
+		div_b.appendChild(b);
+		div_r_b.appendChild(div_b);
 		let sp = document.getElementById('lp-list');
-		sp.appendChild(b);
-		
+		sp.appendChild(div_r_b);
+
 		//добавление блока с разбивкой по времени 
 		var new_div = document.createElement('div');
 		new_div.className = 'container';	
@@ -130,19 +137,6 @@ $(function(){
 		document.getElementById('lp-info').appendChild(new_div);
 		create_list('lp_'+id_lp);
 		
-		let div6r = document.createElement('div');
-		div6r.className = 'row row-m-t';
-    	let b_del = document.createElement('button');
-		b_del.className = 'btn btn-warning';
-		b_del.setAttribute('owner', 'lp_'+id_lp);
-		b_del.setAttribute('onclick', 'click_del()');
-		b_del.type = 'button';
-		b_del.id = 'btn_del';
-		b_del.innerHTML = 'Удалить';
-		
-		div6r.appendChild(b_del);
-		new_div.appendChild(div6r);
-
 		// очистка ранее заполненных полей перед добавлением
 		var btngen = $('[class*="btn-primary"][owner="general"]');
 		for (let i = 0; i < btngen.length; i++) {
@@ -152,57 +146,67 @@ $(function(){
 		$('[id="txt"][owner="general"]')[0].value = 0;
 		
 		//активация последнего добавленного лп
+		if ($('#btn_del').length != 0) {
+			$('#btn_del').remove();
+		}	
 		ch_class_lp_btn('lp_'+id_lp);
+		add_btn_del_row('lp_'+id_lp);
 	});
 	
 	  
-	$(".form").submit(function (e) {
+	$('save_lp').click(function (e) {
+	//$(".form").submit(function (e) {
 			//alert($("#textinput").val()); //0
 			//$("#textinput").val('new value');
-			//alert($("#textinput").val()); //new value
+			alert(123); //new value
 
-			//return true; //отправляете ваш submit
-			if ($('#lp')[0].value == '123') {
-				var xhr = new XMLHttpRequest();
-				var url = "/";
-				xhr.open("POST", url, true);
-				xhr.setRequestHeader("Content-Type", "application/json");
-				xhr.onreadystatechange = function () {
-					if (xhr.readyState === 4 && xhr.status === 200) {
-						var json = JSON.parse(xhr.responseText);
-						console.log(json.email + ", " + json.password);
-					}
-				};
+		// если хоть 1 лп добавлен
+		//if ($('#lp-list div.row').length != 0) {
+			// var xhr = new XMLHttpRequest();
+			// var url = "/";
+			// xhr.open("POST", url, true);
+			// xhr.setRequestHeader("Content-Type", "application/json");
+			// xhr.onreadystatechange = function () {
+			// 	if (xhr.readyState === 4 && xhr.status === 200) {
+			// 		var json = JSON.parse(xhr.responseText);
+			// 		console.log(json.email + ", " + json.password);
+			// 	}
+			// };
 		
-		let teststr = {};			
-		for (let i = 1; i < 25; i++) {		
-			if (document.getElementById('li'+i)) {
-				teststr[i] = {'time1': $('#clock_time1-'+i)[0].value, 'time2': $('#clock_time2-'+i)[0].value, 'd': $('#doza'+i)[0].value}
-			}
-		}
+			// let teststr = {};	
+			for (let i = 1; i < $('#lp-list button.list-group-item').length+1; i++) {
+				console.log($('#lp-list button.list-group-item').id)
+			}		
+			// for (let i = 1; i < 25; i++) {		
+			// 	if (document.getElementById('li'+i)) {
+			// 		teststr[i] = {'time1': $('#clock_time1-'+i)[0].value, 'time2': $('#clock_time2-'+i)[0].value, 'd': $('#doza'+i)[0].value}
+			// 	}
+			// }
 		
-				var data = JSON.stringify(teststr);
-				xhr.send(data);
-			}
-			e.preventDefault();
+			// var data = JSON.stringify(teststr);
+			// xhr.send(data);
+		//}
+		e.preventDefault();
 	});
 });
 
 		
 		
 function create_list(owner) {
-	var btnlist = $('[owner="'+owner+'"][class*="txt_btn"]');
-	for (i in btnlist) {
-		//alert(btnlist[i])
-		//alert($('#b'+id_btn).hasClass('btn-primary'))
-		if ($('#'+btnlist[i].id).hasClass('btn-primary')) {
-			ident = Number(i)+1;
-			create_list_element(ident, owner);
+	for (let i = 1; i < 25; i++) {
+		if ($('[id=b'+i+'][owner='+owner+']').hasClass('btn-primary')) {
+			ident = i;
+			if ($('#comb_time')[0].checked) {
+				while ($('[id=b'+(i+1)+'][owner='+owner+']').hasClass('btn-primary')) {
+					i++;
+				}
+			}
+			create_list_element(ident, owner, i);
 		}
 	}
 }
 
-function create_list_element(ident, owner) {
+function create_list_element(ident, owner, valt2) {
 	var l = document.createElement('li');
 	l.id = 'li'+ident;
 	l.setAttribute('owner', owner);
@@ -218,7 +222,7 @@ function create_list_element(ident, owner) {
 	sp1.appendChild(txt1);
 	d.appendChild(sp1);
 
-	let t1 = create_time_input(ident, 'time1', owner);
+	let t1 = create_time_input(ident, ident, 'time1', owner);
 	d.appendChild(t1);
 			
 	let txt2 = document.createTextNode(' по ');
@@ -226,7 +230,8 @@ function create_list_element(ident, owner) {
 	sp2.appendChild(txt2);
 	d.appendChild(sp2);	
 
-	let t2 = create_time_input(ident, 'time2', owner);
+
+	let t2 = create_time_input(ident, valt2, 'time2', owner);
 	d.appendChild(t2);
 
 	let txt3 = document.createTextNode(' доза ');
@@ -261,7 +266,7 @@ function create_list_element(ident, owner) {
 	b_del.type = 'button';
 	b_del.setAttribute('owner', owner);
 	b_del.setAttribute('onclick', 'click_del_row()');
-	b_del.innerHTML = '<i class="glyphicon glyphicon-remove"><i>';
+	b_del.innerHTML = '<i class="glyphicon glyphicon-remove"></i>';
 	d.appendChild(b_del);
 
 	var ol = document.querySelector('[id=ol][owner='+owner+']');
@@ -269,7 +274,7 @@ function create_list_element(ident, owner) {
 
 }
 
-function create_time_input(ident, pref, owner) {
+function create_time_input(ident, value_time, pref, owner) {
 	let el_div = document.createElement('div');
 	el_div.className = 'input-group col-md-2';
 
@@ -279,10 +284,10 @@ function create_time_input(ident, pref, owner) {
 	el_input.readOnly = true;
 	el_input.className = 'form-control clfc';
 	el_input.type = 'text';
-	if (ident < 10) {
-		el_input.value = '0'+ident+':00';
+	if (value_time < 10) {
+		el_input.value = '0'+value_time+':00';
 	} else {
-		el_input.value = ident+':00';
+		el_input.value = value_time+':00';
 	}
 	el_div.appendChild(el_input);
 	
@@ -309,58 +314,58 @@ function create_time_input(ident, pref, owner) {
 }	
 
 function check_time(owner) {
-//var owner = event.target.getAttribute('owner');
-var times = $('[class*="clfc"][owner='+owner+']');
-//alert(times)
-for (let i = 0; i < times.length; i++) {
-	var id_time = times[i].id.split('-')[1];
-	var hour = '';
-	if (id_time < 10) {
-		hour = '0'+id_time;
-	} else {
-		hour = id_time;
-	}
-	if (times[i].value.length < 4) {
-		if (times[i].value.indexOf(':') == -1) {
-			if (times[i].value < 10) {
-				hour = '0'+times[i].value;
+	//var owner = event.target.getAttribute('owner');
+	var times = $('[class*="clfc"][owner='+owner+']');
+	//alert(times)
+	for (let i = 0; i < times.length; i++) {
+		var id_time = times[i].id.split('-')[1];
+		var hour = '';
+		if (id_time < 10) {
+			hour = '0'+id_time;
+		} else {
+			hour = id_time;
+		}
+		if (times[i].value.length < 4) {
+			if (times[i].value.indexOf(':') == -1) {
+				if (times[i].value < 10) {
+					hour = '0'+times[i].value;
+				} else {
+					hour = times[i].value;
+				}
+				times[i].value = hour+':00';
 			} else {
-				hour = times[i].value;
+				times[i].value = hour+times[i].value;
 			}
-			times[i].value = hour+':00';
+		} else if (times[i].value.length == 4) {
+			times[i].value = '0'+times[i].value;
+		}	
+		
+		if (times[i].value[0] == '0') {
+			if (times[i].value[1] == '0') {
+				var hour1 = '24';	
+			} else {
+				var hour1 = times[i].value[1];	
+			}
 		} else {
-			times[i].value = hour+times[i].value;
+			var hour1 = times[i].value.slice(0,2);			
 		}
-	} else if (times[i].value.length == 4) {
-		times[i].value = '0'+times[i].value;
-	}	
-	
-	if (times[i].value[0] == '0') {
-		if (times[i].value[1] == '0') {
-			var hour1 = '24';	
-		} else {
-			var hour1 = times[i].value[1];	
+		// менять id может только time1 (с), условие на несовпадение времени и id + условие что время не дублирует уже созданное время			
+		if (times[i].id.indexOf('time1') != -1 & hour1 != id_time) {
+			//alert(times[i].id)
+			//alert(hour1)
+			let idsrc = times[i].id.split('-')[0]+'-'+hour1;
+			if (! document.querySelector('[id='+idsrc+'][owner='+owner+']')) {
+				change_id(id_time, hour1, owner);
+				id_time = hour1;
+			} else {
+				alert('время приема <'+hour1+' ч.> уже указано');
+				times[i].value = hour + times[i].value.slice(2); 				
+			}
 		}
-	} else {
-		var hour1 = times[i].value.slice(0,2);			
-	}
-	// менять id может только time1 (с), условие на несовпадение времени и id + условие что время не дублирует уже созданное время			
-	if (times[i].id.indexOf('time1') != -1 & hour1 != id_time) {
-		//alert(times[i].id)
-		//alert(hour1)
-		let idsrc = times[i].id.split('-')[0]+'-'+hour1;
-		if (! document.querySelector('[id='+idsrc+'][owner='+owner+']')) {
-			change_id(id_time, hour1, owner);
-			id_time = hour1;
-		} else {
-			alert('время приема <'+hour1+' ч.> уже указано');
-			times[i].value = hour + times[i].value.slice(2); 				
-		}
-	}
 
-}
-// отрисовка промежутков при различии т1 и т2
-check_intervals(owner);
+	}
+	// отрисовка промежутков при различии т1 и т2
+	check_intervals(owner);
 }
 
 var list_for_change_id = ['li',
@@ -485,5 +490,36 @@ function ch_btn_for_change_class(t1, t2, owner, id_row) {
 			$('[id="b'+i+'"][owner="'+owner+'"]').addClass('btn-default');
 		}
 	}
+
+}
+
+function count_times(owner = 'general') {
+	var k = 0;
+	for (let i = 1; i < 25; i++) {
+		if ($('[id=b'+i+'][owner='+owner+']').hasClass('btn-primary')) {
+		 	if (! $('#comb_time')[0].checked) {
+				k ++;
+			} else {
+				k ++;
+				while ($('[id=b'+(i+1)+'][owner='+owner+']').hasClass('btn-primary')) {
+					i++;
+				}
+			}
+		}	
+	}
+	return k;
+}
+
+function add_btn_del_row(id) {
+	let b_del = document.createElement('button');
+	b_del.className = 'btn btn-link';
+	b_del.id = 'btn_del';
+	b_del.type = 'button';
+	b_del.setAttribute('owner', id);
+	b_del.setAttribute('onclick', 'click_del()');
+	b_del.innerHTML = '<i class="glyphicon glyphicon-remove"></i>';
+
+	let d = document.getElementById('row_'+id);
+	d.appendChild(b_del);
 
 }

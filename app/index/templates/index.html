@@ -44,14 +44,29 @@
 							</div>
 						</div>
 					</div>
+					<div class='checkbox col-md-3'>
+						<label><input id='comb_time' type="checkbox" checked="true" onclick='checkbox()'> Объединить время</label>	
+					</div>
 				</div>
 			</div>
 			<button id='add_lp' type='button' class='btn btn-default'><i class='glyphicon glyphicon-plus'></i></button>
 		</div>
 		<br>
 		<div id='prep' class='row col-md-10'>				
-			<div id='lp-list' class='list-group col-md-3'></div>
+			<div id='lp-list' class='list-group col-md-4'>
+				{#<div class='row'><div class='col-md-10'><button class='list-group-item'>1</button></div></div>
+				<div class='row'>
+					<div class='col-md-10'>
+						<button class='list-group-item active'>2</button>
+					</div>
+					<button class='btn btn-link'><i class="glyphicon glyphicon-remove"></i></button>
+				</div>	
+				<div class='row'><button class='list-group-item '>3</button></div>#}
+			</div>
 			<div id='lp-info' class='col-md-7'></div>
+		</div>
+		<div  class='row col-md-10'>
+			<button id='save_lp' type='submit' class='btn btn-success'>Сохранить</button>
 		</div>
 	</form>
 {% endblock %}

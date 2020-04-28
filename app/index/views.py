@@ -5,7 +5,7 @@ from app.models.testtable import Test
 from wtfpeewee.orm import model_form
 from wtforms.validators import (DataRequired, InputRequired)
 
-inp_method = {1: 'табл.', 2: 'в/в', 3: 'в/м'}
+inp_method = {1: 'табл.', 2: 'в/в', 3: 'в/м', 4: 'п/к'}
 
 Form = model_form(
     Test,
@@ -39,8 +39,9 @@ def lp_page():
     #    form.data2.data = date(1,1,1)
     # print(form.data2.data)
     if request.method == 'POST':
+        pass
         # save_el()
-        print(json.loads(request.data))
+        # print(json.loads(request.data))
         #a = json.loads(request.form['schema'])
         # for k in a:
         #    print(a[k]['time1'])
