@@ -1,12 +1,15 @@
-from app.models.testtable import Test
-
+from app.models.proc_list import Proc_list
+from app.models.lp_list import Lp_list
+from app.models.lp_intervals import Lp_intervals
 
 def all_models():
     ArModels = []
     # независимые таблицы
-    ArModels.append(Test)
+    ArModels.append(Proc_list)
 
     # зависимые таблицы
+    ArModels.append(Lp_list)
+    ArModels.append(Lp_intervals)
     return ArModels
 
 

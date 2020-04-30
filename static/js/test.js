@@ -37,9 +37,11 @@ $(function(){
     		var id_lp  = 0;	
     	}
 
+    	var owner = 'lp_'+id_lp;
+
     	let div_r_b = document.createElement('div');
 		div_r_b.className = 'row';
-		div_r_b.id = 'row_lp_'+id_lp;
+		div_r_b.id = 'row_'+owner;
     	let div_b = document.createElement('div');
 		div_b.className = 'col-md-10';
     	let b = document.createElement('button');
@@ -68,6 +70,8 @@ $(function(){
 		div1.appendChild(sp1);
 		let d1 = document.createElement('input');
 		d1.type = 'date';
+		d1.id = 'date_start';
+		d1.setAttribute('owner', 'lp_'+id_lp);
 		d1.className = 'form-control';
 		d1.value = $('#date-start')[0].value;
 		d1.setAttribute('required', '');
@@ -80,30 +84,34 @@ $(function(){
 
 		let count = document.createElement('input');
 		count.type = 'number';
+		count.id = 'days_count';
+		count.setAttribute('owner', 'lp_'+id_lp);
 		count.className = 'form-control small';
 		count.value = $('#days-count')[0].value; 
 		div1.appendChild(count);
 		div1r.appendChild(div1);
 		new_div.appendChild(div1r);
 
-		let div2r = document.createElement('div');
-		div2r.className = 'row row-m-t';
-		let div2 = document.createElement('div');
-		div2.className = 'form-group';
-		let txt3 = document.createTextNode('дата отмены ');
-		let sp3 = document.createElement('span');
-		sp3.appendChild(txt3);
-		div2.appendChild(sp3);
-		let d2 = document.createElement('input');
-		d2.type = 'date';
-		d2.className = 'form-control';
-		d2.value = '0001-01-01';
-		d2.setAttribute('required', '');
-		div2.appendChild(d2);
-		let lab2 = document.createElement('label');
-		lab2.for = 'form-group';
-		div2r.appendChild(div2);
-		new_div.appendChild(div2r);
+		// let div2r = document.createElement('div');
+		// div2r.className = 'row row-m-t';
+		// let div2 = document.createElement('div');
+		// div2.className = 'form-group';
+		// let txt3 = document.createTextNode('дата отмены ');
+		// let sp3 = document.createElement('span');
+		// sp3.appendChild(txt3);
+		// div2.appendChild(sp3);
+		// let d2 = document.createElement('input');
+		// d2.type = 'date';
+		// d2.id = 'date_end';
+		// d2.setAttribute('owner', 'lp_'+id_lp);
+		// d2.className = 'form-control';
+		// d2.value = '0001-01-01';
+		// d2.setAttribute('required', '');
+		// div2.appendChild(d2);
+		// let lab2 = document.createElement('label');
+		// lab2.for = 'form-group';
+		// div2r.appendChild(div2);
+		// new_div.appendChild(div2r);
 
 		let div3r = document.createElement('div');
 		div3r.className = 'row row-m-t';
@@ -154,39 +162,41 @@ $(function(){
 	});
 	
 	  
-	$('save_lp').click(function (e) {
-	//$(".form").submit(function (e) {
-			//alert($("#textinput").val()); //0
-			//$("#textinput").val('new value');
-			alert(123); //new value
-
-		// если хоть 1 лп добавлен
-		//if ($('#lp-list div.row').length != 0) {
-			// var xhr = new XMLHttpRequest();
-			// var url = "/";
-			// xhr.open("POST", url, true);
-			// xhr.setRequestHeader("Content-Type", "application/json");
-			// xhr.onreadystatechange = function () {
-			// 	if (xhr.readyState === 4 && xhr.status === 200) {
-			// 		var json = JSON.parse(xhr.responseText);
-			// 		console.log(json.email + ", " + json.password);
-			// 	}
-			// };
-		
-			// let teststr = {};	
-			for (let i = 1; i < $('#lp-list button.list-group-item').length+1; i++) {
-				console.log($('#lp-list button.list-group-item').id)
-			}		
-			// for (let i = 1; i < 25; i++) {		
-			// 	if (document.getElementById('li'+i)) {
-			// 		teststr[i] = {'time1': $('#clock_time1-'+i)[0].value, 'time2': $('#clock_time2-'+i)[0].value, 'd': $('#doza'+i)[0].value}
-			// 	}
-			// }
-		
-			// var data = JSON.stringify(teststr);
-			// xhr.send(data);
-		//}
+	$('#save_lp').click(function (e) {
 		e.preventDefault();
+	//$(".form").submit(function (e) {
+		let proc_list = {};
+		proc_list.pat = 123;  // предполагается идентификатор пациента
+		proc_list.his = 123;  // предполагается идентификатор истории болезни пациента
+		proc_list.doc = 123;  // предполагается идентификатор врача
+		proc_list.dep = 'irk.hosp.11';  // предполагается идентификатор отделения
+		proc_list.date_start = new Date().toJSON().slice(0,10);;  // предполагается указание даты начала проц листа
+		proc_list.lp = {};	
+		for (let i = 0; i < $('#lp-list button.list-group-item').length; i++) {
+			//console.log($('#lp-list button.list-group-item')[i].id)
+			owner = $('#lp-list button.list-group-item')[i].id;
+			let times = [];
+			for (let j = 0; j < $('[class=ellist][owner='+owner+']').length; j++) {
+				t=$('[class=ellist][owner='+owner+']')[j].id.slice(2);
+				times.push({time1: $('[id=clock_time1-'+t+'][owner='+owner+']')[0].value,
+							time2: $('[id=clock_time2-'+t+'][owner='+owner+']')[0].value,
+							doza: $('[id=doza-'+t+'][owner='+owner+']')[0].value,
+							method: $('[id=inp-meth-'+t+'][owner='+owner+']')[0].value});
+			}
+
+			proc_list.lp[i]= {name: $('#lp-list button.list-group-item')[i].innerHTML,
+					//id: $('#lp-list button.list-group-item')[i].value,   // в id стоит заложить id лп если будет такая возможность
+					date_start: $('[id=date_start][owner='+owner+']')[0].value,
+					days_count: $('[id=days_count][owner='+owner+']')[0].value,
+					times: times}
+		}		
+		
+		$.ajax({
+		  url: "/",
+		  type: "POST",
+		  data: {proc_list: JSON.stringify(proc_list)}
+		});
+		$(this).off('submit').submit();
 	});
 });
 

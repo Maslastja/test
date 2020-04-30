@@ -3,25 +3,25 @@
 {% block content %}
 	<form id='form' action='' method='post' class='form-inline' novalidate>
 		<div class="row">
-			<div class='col-md-9'>
+			<div class='col-sm-9'>
 				<div class='row'>
-					<div class='form-group sm-text col-md-3'>
+					<div class='form-group sm-text col-sm-3'>
 						<label for='lp'>ЛП</label>
 						<input name='lp' id='lp' type='text' class='form-control'>
 					</div>
-					<div class='form-group col-md-2 sm-text'>
+					<div class='form-group col-sm-2 sm-text'>
 						<label for='doz'>доза</label>
 						<input name='doz' id='doz' type='text' class='form-control small'>	
 					</div>
-					<div class='form-group col-md-2 sm-text'>
+					<div class='form-group col-sm-2 sm-text'>
 						<label for='date-start'>принимать с</label>
-						<input name='date-start' id='date-start' type='date' class='form-control date' required=''>	
+						<input name='date-start' id='date-start' type='date' class='form-control date' required='' value={{ today }}>	
 					</div>
-					<div class='form-group col-md-2 sm-text'>
+					<div class='form-group col-sm-2 sm-text'>
 						<label for='days-count'>кол-во дней</label>
-						<input name='days-count' id='days-count' type='number' class='form-control small'>	
+						<input name='days-count' id='days-count' type='number' class='form-control small' value=1>	
 					</div>
-					<div class='form-group col-md-2 sm-text'>
+					<div class='form-group col-sm-2 sm-text'>
 						<label for='inp-meth'>способ ввода</label>
 						<select name='inp-meth' id='inp-meth' class='form-control'>
 							{% for n in inp_method %}
@@ -33,7 +33,7 @@
 							{% endfor %}
 						</select>	
 					</div>
-					<div id='time-box' class='form-group sm-text col-md-12'>
+					<div id='time-box' class='form-group sm-text col-sm-12'>
 						<label for='time-box'>время приема</label>
 						<div id='time-box-inp' class='input-group input-group-sm'>
 							<input id='txt' type='text' class='form-control' owner='general' disabled value=0>
@@ -44,7 +44,7 @@
 							</div>
 						</div>
 					</div>
-					<div class='checkbox col-md-3'>
+					<div class='checkbox col-sm-3'>
 						<label><input id='comb_time' type="checkbox" checked="true" onclick='checkbox()'> Объединить время</label>	
 					</div>
 				</div>
@@ -52,20 +52,20 @@
 			<button id='add_lp' type='button' class='btn btn-default'><i class='glyphicon glyphicon-plus'></i></button>
 		</div>
 		<br>
-		<div id='prep' class='row col-md-10'>				
-			<div id='lp-list' class='list-group col-md-4'>
-				{#<div class='row'><div class='col-md-10'><button class='list-group-item'>1</button></div></div>
+		<div id='prep' class='row col-sm-10'>				
+			<div id='lp-list' class='list-group col-sm-4'>
+				{#<div class='row'><div class='col-sm-10'><button class='list-group-item'>1</button></div></div>
 				<div class='row'>
-					<div class='col-md-10'>
+					<div class='col-sm-10'>
 						<button class='list-group-item active'>2</button>
 					</div>
 					<button class='btn btn-link'><i class="glyphicon glyphicon-remove"></i></button>
 				</div>	
 				<div class='row'><button class='list-group-item '>3</button></div>#}
 			</div>
-			<div id='lp-info' class='col-md-7'></div>
+			<div id='lp-info' class='col-sm-7'></div>
 		</div>
-		<div  class='row col-md-10'>
+		<div  class='row col-sm-10'>
 			<button id='save_lp' type='submit' class='btn btn-success'>Сохранить</button>
 		</div>
 	</form>

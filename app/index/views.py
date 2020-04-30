@@ -1,14 +1,14 @@
 from flask import render_template, request, redirect, url_for
 import json
 from datetime import date
-from app.models.testtable import Test
+from app.models.proc_list import Proc_list
 from wtfpeewee.orm import model_form
 from wtforms.validators import (DataRequired, InputRequired)
 
 inp_method = {1: 'табл.', 2: 'в/в', 3: 'в/м', 4: 'п/к'}
 
 Form = model_form(
-    Test,
+    Proc_list,
     field_args={
         'lp': dict(
             label='lec',
@@ -39,15 +39,16 @@ def lp_page():
     #    form.data2.data = date(1,1,1)
     # print(form.data2.data)
     if request.method == 'POST':
-        pass
-        # save_el()
-        # print(json.loads(request.data))
-        #a = json.loads(request.form['schema'])
-        # for k in a:
-        #    print(a[k]['time1'])
+        # pass
+        # print(request.form['proc_list'])
+        proc_list = json.loads(request.form['proc_list'])
+        save_el(proc_list)
+       # print(a['lp'])
+        # or k in a['lp']:
+        #    print(a['lp'][k])
         # redirect(url_for('index.start_page'))
     return render_template('index.html', title='Процедурный лист', form=form,
-                           inp_method=inp_method)
+                           inp_method=inp_method, today=date.today())
 
 
 def table_page():
@@ -80,13 +81,11 @@ def analis_page():
     return render_template('analis.html', title='Процедурный лист', form=form)
 
 
-def save_el():
-    lp = Test(lp=text,
-              typenews=form.typenews.data,
-              name=form.name.data,
-              isactive=form.isactive.data,
-              createdate=d,
-              changedate=d,
-              user=session.user.id)
-    news.save()
-    redirect(url_for('index.start_page'))
+def save_el(proc_list):
+    new_el = Proc_list(pat=proc_list['pat'],
+              his=proc_list['his'],
+              date_start=proc_list['date_start'],
+              doc=proc_list['doc'],
+              dep=proc_list['dep'])
+    new_el.save()
+    redirect(url_for('index.lp_page'))
