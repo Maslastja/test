@@ -12,26 +12,6 @@
 		<script src={{ url_for('static',filename='js/buttons.js') }}></script> 
 	</head>
 	<body>
-		<div class='container'>
-			<ul class="nav nav-tabs">
-				{% if navname == 'navlp' %}
-			  		<li role="presentation" class="active"><a href={{ url_for('index.lp_page') }}>Лекарственные препараты</a></li>
-			  	{% else %}
-					<li role="presentation"><a href={{ url_for('index.lp_page') }}>Лекарственные препараты</a></li>
-				{% endif %}	
-				{% if navname == 'navtable' %}
-			  		<li role="presentation" class="active"><a href={{ url_for('index.table_page') }}>Стол</a></li>
-			  	{% else %}
-					<li role="presentation"><a href={{ url_for('index.table_page') }}>Стол</a></li>
-				{% endif %}	
-				{% if navname == 'navanalis' %}
-			  		<li role="presentation" class="active"><a href={{ url_for('index.analis_page') }}>Анализы</a></li>
-			  	{% else %}
-					<li role="presentation"><a href={{ url_for('index.analis_page') }}>Анализы</a></li>
-				{% endif %}	
-			</ul>
-			<br>
-			{% block content %}{% endblock %}
-		</div>
+		{% block content %}{% endblock %}
 	</body>
 </html>	

@@ -3,8 +3,8 @@ $(function(){
 			format: 'HH:mm',
 			trigger: 'manual'
 	});   
- 
-	//$('.toggle-btn').click(function(e){ 
+ 	
+ 	//$('.toggle-btn').click(function(e){ 
 	//alert(123)  
 	//		e.stopPropagation();
 	//		$('.clockface-open').each(function(){
@@ -52,7 +52,7 @@ $(function(){
 		b.setAttribute('onclick', 'click_lp()');
 		div_b.appendChild(b);
 		div_r_b.appendChild(div_b);
-		let sp = document.getElementById('lp-list');
+		sp = document.getElementById('lp-list');
 		sp.appendChild(div_r_b);
 
 		//добавление блока с разбивкой по времени 
@@ -127,7 +127,7 @@ $(function(){
 		let div4 = document.getElementById('time-box-inp').cloneNode(true);
 		let txt_count = div4.querySelector('input');
 		txt_count.setAttribute('owner', 'lp_'+id_lp);
-		let elems_b = div4.querySelectorAll('button.txt_btn');
+		elems_b = div4.querySelectorAll('button.txt_btn');
 		for (let i = 0; i < elems_b.length; i++) {
 			elems_b[i].setAttribute('owner', 'lp_'+id_lp);
 		}
@@ -146,7 +146,7 @@ $(function(){
 		create_list('lp_'+id_lp);
 		
 		// очистка ранее заполненных полей перед добавлением
-		var btngen = $('[class*="btn-primary"][owner="general"]');
+		btngen = $('[class*="btn-primary"][owner="general"]');
 		for (let i = 0; i < btngen.length; i++) {
 			$('#'+btngen[i].id).removeClass('btn-primary');
 			$('#'+btngen[i].id).addClass('btn-default');	
@@ -190,13 +190,16 @@ $(function(){
 					days_count: $('[id=days_count][owner='+owner+']')[0].value,
 					times: times}
 		}		
-		
+		//console.log(form);
 		$.ajax({
-		  url: "/",
+		  url: "/lp",
 		  type: "POST",
 		  data: {proc_list: JSON.stringify(proc_list)}
+		}).done(function(resp) {
+			$(this).off('submit').submit()
+			$(location).attr('href', resp.url);				
 		});
-		$(this).off('submit').submit();
+		//$(this).off('submit').submit();
 	});
 });
 
@@ -217,7 +220,7 @@ function create_list(owner) {
 }
 
 function create_list_element(ident, owner, valt2) {
-	var l = document.createElement('li');
+	let l = document.createElement('li');
 	l.id = 'li'+ident;
 	l.setAttribute('owner', owner);
 	l.className = 'ellist';
@@ -249,8 +252,6 @@ function create_list_element(ident, owner, valt2) {
 	sp3.appendChild(txt3);
 	d.appendChild(sp3);
 
-	// let el_div = document.createElement('div');
-	// el_div.className = 'input-group col-md-2';
 	let doza = document.createElement('input');
 	doza.id = 'doza-'+ident;
 	doza.setAttribute('owner', owner);
@@ -258,7 +259,6 @@ function create_list_element(ident, owner, valt2) {
 	doza.className = 'small';
 	doza.value = document.getElementById('doz').value;
 	d.appendChild(doza);
-	//d.appendChild(el_div);
 
 	let txt4 = document.createTextNode(' способ ввода ');
 	let sp4 = document.createElement('span');
@@ -279,7 +279,7 @@ function create_list_element(ident, owner, valt2) {
 	b_del.innerHTML = '<i class="glyphicon glyphicon-remove"></i>';
 	d.appendChild(b_del);
 
-	var ol = document.querySelector('[id=ol][owner='+owner+']');
+	ol = document.querySelector('[id=ol][owner='+owner+']');
 	ol.appendChild(l);
 
 }
@@ -437,7 +437,6 @@ function change_id(old_id, new_id, owner) {
 	$('[id="b'+new_id+'"][owner="'+owner+'"]').removeClass("btn-default");	
 	$('[id="b'+new_id+'"][owner="'+owner+'"]').addClass("btn-primary");
 	sort_list(owner);
-	//get_value_schema();
 }
 
 function sort_list(owner) {
@@ -447,17 +446,6 @@ function sort_list(owner) {
 		return $(a).data("sort") - $(b).data("sort")
 	});
 	$(arItems).appendTo('[id=ol][owner='+owner+']');	
-}
-
-function get_value_schema() {
-	let teststr = {};			
-	for (let i = 1; i < 25; i++) {		
-		if (document.getElementById('li'+i)) {
-			teststr[i] = {'time1': $('#clock_time1-'+i)[0].value, 'time2': $('#clock_time2-'+i)[0].value, 'd': $('#doza'+i)[0].value}
-		}
-	}
-	
-	document.getElementById('schema').value = JSON.stringify(teststr);
 }
 
 
@@ -479,7 +467,7 @@ function ch_btn_for_change_class(t1, t2, owner, id_row) {
 	for (let i = t1; i < t2+1; i++) {
 		var can_def = true;
 
-		var rows = $('[class="ellist"][owner="'+owner+'"]');
+		rows = $('[class="ellist"][owner="'+owner+'"]');
 		for (let k = 0; k < rows.length; k++) {
 			var id_row_loop = rows[k].getAttribute('data-sort');
 			if (id_row != id_row_loop) {
@@ -529,7 +517,7 @@ function add_btn_del_row(id) {
 	b_del.setAttribute('onclick', 'click_del()');
 	b_del.innerHTML = '<i class="glyphicon glyphicon-remove"></i>';
 
-	let d = document.getElementById('row_'+id);
+	d = document.getElementById('row_'+id);
 	d.appendChild(b_del);
 
 }

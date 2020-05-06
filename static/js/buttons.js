@@ -51,7 +51,6 @@ function clickbtn(idtxt) {
 	}	
 
 	if (owner != 'general') {
-		//if ($('#b'+ident).hasClass('btn-primary')) {
 		if (! document.querySelector('[id="li'+event.target.id.slice(1)+'"][owner="'+owner+'"]')) {
 			if ($('[id='+event.target.id+'][owner='+owner+']').hasClass('btn-primary')) {
 				create_list_element(event.target.id.slice(1), owner, event.target.id.slice(1));
@@ -63,7 +62,7 @@ function clickbtn(idtxt) {
 						while ($('[id=b'+(valt2+1)+'][owner='+owner+']').hasClass('btn-primary')) {
 							valt2 ++;
 						}
-						console.log(i)
+						//console.log(i)
 						// проверить наличие времени в списке
 						if ($('[id=li'+i+'][owner='+owner+']').length != 0) {
 							// проверить время окончания промежутка
@@ -80,9 +79,6 @@ function clickbtn(idtxt) {
 							// создать элемент списка
 							create_list_element(i, owner, valt2);
 						}
-						// while (i <= valt2) {
-						// 	i++;
-						// }
 						i = valt2;
 					}
 				}	
