@@ -6,6 +6,11 @@
 		<div class="row">
 			<button type='submit' id='add' class='btn btn-default'>Добавить</button>
 		</div>
+		<ol>
+			{% for elem in lists %}
+				<li><a href={{ url_for('index.lp_page', id = elem['id']) }} target='_blank'>Процедурный лист от {{ elem['date_start'] }} отд. {{ elem['dep'] }} (спец. id {{ elem['doc'] }})</a></li>
+			{% endfor %}
+		</ol>
 	</form>
 </div>	
 {% endblock %}

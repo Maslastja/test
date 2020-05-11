@@ -1,6 +1,6 @@
 <script>
-	var pl = '{{ pl|tojson }}';
- 	console.log(JSON.parse(pl))
+ 	let str_pl = '{{ pl|tojson }}';
+	var pl = JSON.parse(str_pl);
 </script>
 {% set navname = 'navlp' %}
 {% extends 'base.html' %}

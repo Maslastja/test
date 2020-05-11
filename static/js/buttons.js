@@ -37,11 +37,11 @@ function click_del() {
 // кнопка нажатия времени 1-24
 function clickbtn(idtxt) {
 	var owner = event.target.getAttribute('owner');
-	if ($('[id='+event.target.id+'][owner='+owner+']').hasClass('btn-primary') & owner != 'general' & $('[id=li'+event.target.id.slice(1)+'][owner='+owner+']').length != 0) {
+	if ($('[id='+event.target.id+'][owner='+owner+']').hasClass('btn-primary') & owner != 'general' & $('[data-sort="'+event.target.id.slice(1)+'"][owner='+owner+']').length != 0) {
 		let t1 = get_hour($('[id=clock_time1-'+event.target.id.slice(1)+'][owner='+owner+']')[0]);
+		// console.log(t1);
 		let t2 = get_hour($('[id=clock_time2-'+event.target.id.slice(1)+'][owner='+owner+']')[0]);
-		//console.log(t1);
-		//console.log(t2);
+		// console.log(t2);
 		ch_btn_for_change_class(t1, t2, owner, event.target.id.slice(1));
 		// for (let k = t1; k < t2+1; k++) {
 		// 	$('[id=b'+k+'][owner='+owner+']').toggleClass('btn-default btn-primary');
@@ -51,7 +51,7 @@ function clickbtn(idtxt) {
 	}	
 
 	if (owner != 'general') {
-		if (! document.querySelector('[id="li'+event.target.id.slice(1)+'"][owner="'+owner+'"]')) {
+		if (! document.querySelector('[data-sort="'+event.target.id.slice(1)+'"][owner="'+owner+'"]')) {
 			if ($('[id='+event.target.id+'][owner='+owner+']').hasClass('btn-primary')) {
 				create_list_element(event.target.id.slice(1), owner, event.target.id.slice(1));
 			} else {
@@ -64,7 +64,7 @@ function clickbtn(idtxt) {
 						}
 						//console.log(i)
 						// проверить наличие времени в списке
-						if ($('[id=li'+i+'][owner='+owner+']').length != 0) {
+						if ($('[data-sort="'+i+'"][owner='+owner+']').length != 0) {
 							// проверить время окончания промежутка
 							let ht2 = get_hour($('[id=clock_time2-'+i+'][owner='+owner+']')[0]);
 							if (ht2 != valt2) {
@@ -85,7 +85,7 @@ function clickbtn(idtxt) {
 
 			}
 		} else {
-			$('[id=li'+event.target.id.slice(1)+'][owner='+owner+']').remove();	
+			$('[data-sort="'+event.target.id.slice(1)+'"][owner='+owner+']').remove();	
 
 		}
 		var k = $('[class=ellist][owner='+owner+']').length;
@@ -124,7 +124,7 @@ function click_del_row() {
 	var t1 = get_hour($('[id="clock_time1-'+id_row+'"][owner="'+owner_row+'"]')[0]);
 	var t2 = get_hour($('[id="clock_time2-'+id_row+'"][owner="'+owner_row+'"]')[0]);
 	ch_btn_for_change_class(t1, t2, owner_row, id_row);
-	$('[id="li'+id_row+'"][owner="'+owner_row+'"]').remove();	
+	$('[data-sort="'+id_row+'"][owner="'+owner_row+'"]').remove();	
 	//sort_list(owner_row);
 }
 

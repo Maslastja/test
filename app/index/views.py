@@ -40,18 +40,22 @@ def start_page():
     # if form.data2.data == '':
     #    form.data2.data = date(1,1,1)
     # print(form.data2.data)
+    id_pat = 123
+    his = 123
+    lists = get_pl_by_pat(id_pat, his)
     if request.method == 'POST':
         return redirect(url_for('index.lp_page'))
-    return render_template('index.html', title='Процедурный лист')
+    return render_template('index.html', title='Процедурный лист', lists=lists)
 
 
 def lp_page():
+    pl=''
     id = request.args.get('id')
     if id:
         # получение данных по проц листу
-        pl = get_lp_by_pl_id(id)
+        pl = get_pl_by_id(id)
         #pl = json.dumps({'pl': pl})
-        print(pl)
+        # print(pl)
     # form = Form(request.form or None)
     # if form.data2.data == '':
     #    form.data2.data = date(1,1,1)
@@ -134,6 +138,23 @@ def save_el(proc_list):
     return new_el
 
 
+def get_pl_by_id(id):
+    query = (Proc_list
+            .select()
+            .where(Proc_list.id == id)
+            .namedtuples())
+    for elem in query:
+        pl = {
+                'pat': elem.pat,
+                'his': elem.his,
+                'doc': elem.doc,
+                'dep': elem.dep,
+                'date_start': elem.date_start.strftime('%Y-%m-%d'),
+                'lp': get_lp_by_pl_id(id)
+                }  
+    return pl 
+
+
 def get_lp_by_pl_id(id):
     query = (Lp_list
             .select()
@@ -141,18 +162,18 @@ def get_lp_by_pl_id(id):
             .order_by(Lp_list.id)
             .namedtuples())
     
-    pl = {}
+    lp = {}
     i = 0
     for elem in query:
-        i = i+1
-        pl[i] = {
+        lp[i] = {
                  'name': elem.lp_name,
                  'date_start': elem.date_start.strftime('%Y-%m-%d'),
                  'days_count': elem.days,
                  'times': get_times(elem.id)
                  }
+        i = i+1
 
-    return pl
+    return lp
 
 
 def get_times(id):
@@ -162,12 +183,33 @@ def get_times(id):
             .order_by(Lp_intervals.id)
             .namedtuples())
 
-    times = {}
+    times = []
+    # i = 0
     for elem in query_t:
-        times['time1'] = elem.time_start
-        times['time2'] = elem.time_end
-        times['doza'] = elem.doza
-        times['method'] = elem.method
+        # i = i+1
+        times.append({
+                    'time1': elem.time_start,
+                    'time2': elem.time_end,
+                    'doza': elem.doza,
+                    'method': elem.method
+                    })
 
     return times
- 
+
+
+def get_pl_by_pat(id_pat, his):
+    query = (Proc_list
+            .select()
+            .where((Proc_list.pat == id_pat) &
+                   (Proc_list.his == his))
+            .namedtuples())
+    pl = []
+    for elem in query:
+        pl.append({
+            'id': elem.id,
+            'doc': elem.doc,
+            'dep': elem.dep,
+            'date_start': elem.date_start.strftime('%Y-%m-%d')
+            })
+    # print(pl)
+    return pl
