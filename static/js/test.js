@@ -91,15 +91,15 @@ $(function(){
 		
 		console.log(JSON.stringify(proc_list) == JSON.stringify(pl));
 		//console.log(JSON.stringify(pl));
-		// $.ajax({
-		//   url: "/lp",
-		//   type: "POST",
-		//   data: {proc_list: JSON.stringify(proc_list)}
-		// }).done(function(resp) {
-		// 	$(this).off('submit').submit()
-		// 	$(location).attr('href', resp.url);				
-		// });
-		//$(this).off('submit').submit();
+		$.ajax({
+		   url: "/lp",
+		   type: "POST",
+		   data: {proc_list: JSON.stringify(proc_list)}
+		}).done(function(resp) {
+		 	$(this).off('submit').submit()
+		 	$(location).attr('href', resp.url);				
+		});
+		$(this).off('submit').submit();
 	});
 
 	if (pl != '') {
