@@ -6,6 +6,21 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class='container'>
+	<div class='container'>
+	<div class='form-group col-sm-3'>
+		<label for='pl_date_start'>дата начала проц. листа</label>
+		<input name='pl_date_start' id='pl_date_start' type='date' class='form-control'>
+	</div>	
+	<div class='form-group col-sm-3'>
+		<label for='dep'>отделение</label>
+		<input name='dep' id='dep' type='text' class='form-control'>
+	</div>	
+	<div class='form-group col-sm-3'>
+		<label for='doc'>врач</label>
+		<input name='doc' id='doc' type='text' class='form-control'>
+	</div>	
+	</div>
+	<div>
 	<ul class="nav nav-tabs">
 		{% if navname == 'navlp' %}
 	  		<li role="presentation" class="active"><a href={{ url_for('index.lp_page') }}>Лекарственные препараты</a></li>
@@ -23,6 +38,7 @@
 			<li role="presentation"><a href={{ url_for('index.analis_page') }}>Анализы</a></li>
 		{% endif %}	
 	</ul>
+	</div>
 	<br>
 
 	<form id='form' action='' method='post' class='form-inline' novalidate>

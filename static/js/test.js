@@ -62,10 +62,19 @@ $(function(){
 		e.preventDefault();
 	//$(".form").submit(function (e) {
 		let proc_list = {};
-		proc_list.date_start = new Date().toJSON().slice(0,10);;  // предполагается указание даты начала проц листа
-		proc_list.dep = 'irk.hosp.11';  // предполагается идентификатор отделения
-		proc_list.doc = 123;  // предполагается идентификатор врача
+		
 		proc_list.his = 123;  // предполагается идентификатор истории болезни пациента
+		if (pl != '') {
+			proc_list.date_start = $('#pl_date_start')[0].value;  // предполагается указание даты начала проц листа
+			proc_list.dep = $('#dep')[0].value  // предполагается идентификатор отделения
+			proc_list.doc = $('#doc')[0].value  // предполагается идентификатор врача
+			proc_list.id = pl.id;
+		} else {
+			proc_list.date_start = new Date().toJSON().slice(0,10);  // предполагается указание даты начала проц листа
+			proc_list.dep = 'irk.hosp.11';  // предполагается идентификатор отделения
+			proc_list.doc = 123;  // предполагается идентификатор врача
+			proc_list.id = 'null';
+		}
 		proc_list.lp = {};	
 		proc_list.pat = 123;  // предполагается идентификатор пациента
 		for (let i = 0; i < $('#lp-list button.list-group-item').length; i++) {
@@ -75,6 +84,7 @@ $(function(){
 			for (let j = 0; j < $('[class=ellist][owner='+owner+']').length; j++) {
 				t=$('[class=ellist][owner='+owner+']')[j].getAttribute('data-sort');
 				times.push({doza: $('[id=doza-'+t+'][owner='+owner+']')[0].value,
+							id: $('.ellist[owner='+owner+']')[0].id,
 							method: Number($('[id=inp-meth-'+t+'][owner='+owner+']')[0].value),
 							time1: $('[id=clock_time1-'+t+'][owner='+owner+']')[0].value,
 							time2: $('[id=clock_time2-'+t+'][owner='+owner+']')[0].value}
@@ -83,6 +93,7 @@ $(function(){
 
 			proc_list.lp[i]= {date_start: $('[id=date_start][owner='+owner+']')[0].value,
 					days_count: Number($('[id=days_count][owner='+owner+']')[0].value),
+					id: $('#lp-list button.list-group-item')[i].getAttribute('id-db'),
 					name: $('#lp-list button.list-group-item')[i].innerHTML,
 					//id: $('#lp-list button.list-group-item')[i].value,   // в id стоит заложить id лп если будет такая возможность
 					
@@ -162,7 +173,6 @@ function check_time(owner) {
 		}
 
 	}
-	console.log('пройдено');
 	// отрисовка промежутков при различии т1 и т2
 	check_intervals(owner);
 }
@@ -183,7 +193,6 @@ function check_intervals(owner) {
 		var id_time = $('[class="ellist"][owner='+owner+']')[i].getAttribute('data-sort');
 		var h1 = get_hour($('[id="clock_time1-'+id_time+'"][owner='+owner+']')[0]);
 		var h2 = get_hour($('[id="clock_time2-'+id_time+'"][owner='+owner+']')[0]);
-		console.log('here')
 		if (h1 == 0) {
 			h1 = 24;
 		}
@@ -314,6 +323,9 @@ function get_id_lp() {
 
 function load_proc_list(pl) {
 	console.log(pl)
+	$('#pl_date_start')[0].value = pl.date_start;
+	$('#dep')[0].value = pl.dep;
+	$('#doc')[0].value = pl.doc;
 	for (el in pl.lp) {
     	id_lp = get_id_lp();
 
@@ -321,7 +333,7 @@ function load_proc_list(pl) {
 
     	// создание кнопки лп в левом блоке
     	// console.log(pl.lp[el])
-    	add_lp_button(pl.lp[el].name, owner, false);
+    	add_lp_button(pl.lp[el].name, owner, pl.lp[el].id, false);
     	// добавление блока с разбивкой по времени 
     	add_lp_block(owner, pl.lp[el])
     	$('.container[owner="'+owner+'"]').hide();

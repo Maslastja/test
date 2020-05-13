@@ -1,4 +1,4 @@
-function add_lp_button(val, owner, active=true){
+function add_lp_button(val, owner, id_db = null, active=true){
 	let div_r_b = document.createElement('div');
 	div_r_b.className = 'row';
 	div_r_b.id = 'row_'+owner;
@@ -14,6 +14,7 @@ function add_lp_button(val, owner, active=true){
 	b.id = owner;     
 	b.innerHTML = val;
 	b.setAttribute('onclick', 'click_lp()');
+	b.setAttribute('id-db', id_db);
 	div_b.appendChild(b);
 	div_r_b.appendChild(div_b);
 	sp = document.getElementById('lp-list');
@@ -164,14 +165,14 @@ function create_list_bd(times, owner) {
 				$('[id=b'+i+'][owner='+owner+']').addClass('btn-primary');
 			}
 		}
-		create_list_element(h1, owner, h2, times[t].doza, times[t].method);
+		create_list_element(h1, owner, h2, times[t].doza, times[t].method, times[t].id);
 	}
 }
 
 
-function create_list_element(ident, owner, valt2, doz=null, meth=null) {
+function create_list_element(ident, owner, valt2, doz=null, meth=null, id_db='') {
 	let l = document.createElement('li');
-	//l.id = 'li'+ident; id будет из бд, для новых id не будет
+	l.id = id_db;
 	l.setAttribute('owner', owner);
 	l.className = 'ellist';
 	l.setAttribute('data-sort', ident);

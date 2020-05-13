@@ -51,7 +51,7 @@ def start_page():
 def lp_page():
     pl=''
     id = request.args.get('id')
-    if id:
+    if (request.method == 'GET') and id:
         # получение данных по проц листу
         pl = get_pl_by_id(id)
         #pl = json.dumps({'pl': pl})
@@ -64,6 +64,8 @@ def lp_page():
         # pass
         # print(request.form)
         proc_list = json.loads(request.form['proc_list'])
+        print(proc_list)
+        
         id = save_el(proc_list)
        # print(a['lp'])
         # or k in a['lp']:
@@ -75,22 +77,18 @@ def lp_page():
 
 
 def table_page():
-    # form = Form(request.form or None)
-    # if form.data2.data == '':
-    #    form.data2.data = date(1,1,1)
-    # print(form.data2.data)
     if request.method == 'POST':
         pass
-        # save_el()
-       # print(json.loads(request.data))
-        #a = json.loads(request.form['schema'])
-        # for k in a:
-        #    print(a[k]['time1'])
-        # redirect(url_for('index.start_page'))
     return render_template('table.html', title='Процедурный лист')
 
 
 def analis_page():
+    if request.method == 'POST':
+        pass
+    return render_template('analis.html', title='Процедурный лист')
+
+
+def pr_list():
     # form = Form(request.form or None)
     # if form.data2.data == '':
     #    form.data2.data = date(1,1,1)
@@ -103,39 +101,51 @@ def analis_page():
         # for k in a:
         #    print(a[k]['time1'])
         # redirect(url_for('index.start_page'))
-    return render_template('analis.html', title='Процедурный лист')
+    return render_template('pr_list.html', title='Процедурный лист')
 
 
 def save_el(proc_list):
-    new_el = Proc_list(pat=proc_list['pat'],
+    if proc_list['id'] != 'null':
+        (Proc_list
+         .update(pat=proc_list['pat'],
+                 his=proc_list['his'],
+                 date_start=proc_list['date_start'],
+                 doc=proc_list['doc'],
+                 dep=proc_list['dep'])
+         .where(Proc_list.id == proc_list['id'])
+         .execute())
+        el = proc_list['id']
+    else:    
+        el = Proc_list(pat=proc_list['pat'],
                        his=proc_list['his'],
                        date_start=proc_list['date_start'],
                        doc=proc_list['doc'],
                        dep=proc_list['dep'])
-    new_el.save()
+        el.save()
 
-    for elem in proc_list['lp']:
-        lp = proc_list['lp'][elem]
-        # new_el_lp = Lp_list(proc_list=new_el,
-        #                     lp_name=lp['name'],
-        #                     lp_id=lp['id'],
-        #                     date_start=lp['date_start'],
-        #                     days=lp['days_count'])
-        new_el_lp = Lp_list(proc_list=new_el,
-                            lp_name=lp['name'],
-                            date_start=lp['date_start'],
-                            days=lp['days_count'])
-        new_el_lp.save()
+    if proc_list['id'] == 'null': #временное ограничение на запись уже сущ проц листа
+        for elem in proc_list['lp']:
+            lp = proc_list['lp'][elem]
+            # new_el_lp = Lp_list(proc_list=new_el,
+            #                     lp_name=lp['name'],
+            #                     lp_id=lp['id'],
+            #                     date_start=lp['date_start'],
+            #                     days=lp['days_count'])
+            new_el_lp = Lp_list(proc_list=el,
+                                lp_name=lp['name'],
+                                date_start=lp['date_start'],
+                                days=lp['days_count'])
+            new_el_lp.save()
 
-        for t in lp['times']:
-            new_el_t = Lp_intervals(lp=new_el_lp,
-                            time_start=t['time1'],
-                            time_end=t['time2'],
-                            doza=t['doza'],
-                            method=t['method'])
-            new_el_t.save()
+            for t in lp['times']:
+                new_el_t = Lp_intervals(lp=new_el_lp,
+                                time_start=t['time1'],
+                                time_end=t['time2'],
+                                doza=t['doza'],
+                                method=t['method'])
+                new_el_t.save()
 
-    return new_el
+    return el
 
 
 def get_pl_by_id(id):
@@ -145,6 +155,7 @@ def get_pl_by_id(id):
             .namedtuples())
     for elem in query:
         pl = {
+                'id': elem.id,
                 'pat': elem.pat,
                 'his': elem.his,
                 'doc': elem.doc,
@@ -166,6 +177,7 @@ def get_lp_by_pl_id(id):
     i = 0
     for elem in query:
         lp[i] = {
+                 'id': elem.id,
                  'name': elem.lp_name,
                  'date_start': elem.date_start.strftime('%Y-%m-%d'),
                  'days_count': elem.days,
@@ -188,6 +200,7 @@ def get_times(id):
     for elem in query_t:
         # i = i+1
         times.append({
+                    'id': elem.id,
                     'time1': elem.time_start,
                     'time2': elem.time_end,
                     'doza': elem.doza,
