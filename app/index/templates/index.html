@@ -9,7 +9,7 @@
 		<ol>
 			{#<li><a href={{ url_for('index.pr_list') }} target='_blank'>Процедурный лист test</a></li>#}
 			{% for elem in lists %}
-				<li><a href={{ url_for('index.lp_page', id = elem['id']) }} target='_blank'>Процедурный лист от {{ elem['date_start'] }} отд. {{ elem['dep'] }} (спец. id {{ elem['doc'] }})</a></li>
+				<li><a href={{ url_for('index.lp_page', id = elem['id']) }}>Процедурный лист от {{ elem['date_start'] }} отд. {{ elem['dep'] }} (спец. id {{ elem['doc'] }})</a></li>
 			{% endfor %}
 		</ol>
 	</form>
